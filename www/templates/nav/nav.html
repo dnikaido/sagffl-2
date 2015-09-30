@@ -1,0 +1,23 @@
+<ion-side-menus enable-menu-with-back-views="true">
+  <ion-side-menu side="left" layout="column">
+    <md-button ui-sref="nav.home"
+               menu-close>Home</md-button>
+    <md-button ui-sref="nav.announcements"
+               menu-close>Announcements</md-button>
+    <md-button ui-sref="nav.images"
+               menu-close>Images</md-button>
+  </ion-side-menu>
+  <ion-side-menu-content>
+    <ion-nav-bar>
+      <ion-nav-back-button class="no-text"></ion-nav-back-button>
+      <ion-nav-buttons side="left">
+        <md-button menu-toggle="left"
+                   class="button button-icon icon ion-navicon">
+        </md-button>
+      </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-nav-view name="main"></ion-nav-view>
+  </ion-side-menu-content>
+</ion-side-menus>
+
+
