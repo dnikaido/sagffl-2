@@ -9,7 +9,9 @@
   </ion-side-menu>
   <ion-side-menu-content>
     <ion-nav-bar>
-      <ion-nav-back-button class="no-text"></ion-nav-back-button>
+      <ion-nav-back-button class="button-clear">
+        <md-icon md-svg-icon="chevron-left"></md-icon>
+      </ion-nav-back-button>
       <ion-nav-buttons side="left">
         <md-button menu-toggle="left"
                    class="button button-icon icon ion-navicon">
@@ -17,6 +19,14 @@
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="main"></ion-nav-view>
+    <div class="tabs">
+      <a ui-sref="nav.announcements" class="tab-item">
+        A
+      </a>
+      <a ui-sref="nav.images" class="tab-item">
+        I
+      </a>
+    </div>
   </ion-side-menu-content>
 </ion-side-menus>
 

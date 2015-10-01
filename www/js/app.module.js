@@ -14,6 +14,7 @@
   function configMaterial($mdIconProvider) {
     $mdIconProvider
       .icon('menu', 'img/icons/menu.svg', 24)
+      .icon('chevron-left', 'img/icons/chevron-left.svg', 24)
       .icon('plus', 'img/icons/plus.svg', 24);
   }
   function configIonic($ionicPlatform) {
