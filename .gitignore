@@ -6,3 +6,5 @@ platforms/
 plugins/
 www/lib/
 .idea/
+www/js/app.config.js
+

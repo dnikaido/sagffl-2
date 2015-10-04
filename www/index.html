@@ -6,8 +6,7 @@
     <title></title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
-    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -23,17 +22,20 @@
 
     <!-- your app's js -->
     <script src="js/app.module.js"></script>
+    <script src="js/app.config.js"></script>
 
     <!--template js-->
     <script src="templates/nav/nav.js"></script>
     <script src="templates/home/home.js"></script>
     <script src="templates/announcements/announcements.js"></script>
     <script src="templates/images/images.js"></script>
-  </head>
+    <script src="templates/programs/programs.js"></script>
 
-  <!--services-->
-  <script src="templates/images/images.service.js"></script>
-  <script src="js/services/anchor.service.js"></script>
+    <!--services-->
+    <script src="templates/images/images.service.js"></script>
+    <script src="js/services/anchor.service.js"></script>
+    <script src="js/services/leagueapps.service.js"></script>
+  </head>
 
   <body ng-app="sagffl">
     <ion-nav-view></ion-nav-view>

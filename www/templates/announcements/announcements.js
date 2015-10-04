@@ -5,8 +5,23 @@
     .config(configRoute)
     .controller('AnnouncementsController', AnnouncementsController);
 
-  function AnnouncementsController() {
+  function AnnouncementsController($log, $leagueapps) {
+    var vm = this;
 
+    vm.announcements = [];
+
+    activate();
+
+    function activate() {
+      $leagueapps.getAnnouncements()
+        .success(function(response) {
+          $log.debug(response);
+          vm.announcements = response;
+        })
+        .catch(function(error) {
+          $log.debug(error);
+        });
+    }
   }
   function configRoute($stateProvider) {
     $stateProvider

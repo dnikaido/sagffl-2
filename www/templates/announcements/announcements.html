@@ -1,5 +1,15 @@
-<ion-view view-title="Announcements">
-  <ion-content>
-    Announcements!
+<ion-view title="Announcements">
+  <ion-content padding="true">
+    <div ng-repeat="announcement in vm.announcements"
+         class="list card stable-bg">
+      <div class="item item-avatar">
+        <img ng-src="{{ announcement.userIconUrl }}">
+        <h2>{{ announcement.userFirstName }}</h2>
+        <p>aka {{ announcement.username }}</p>
+      </div>
+      <div ng-bind-html="announcement.message"
+           class="item item-body">
+      </div>
+    </div>
   </ion-content>
 </ion-view>
