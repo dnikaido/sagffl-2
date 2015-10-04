@@ -1,7 +1,9 @@
 <ion-view title="Programs">
-  <ion-content padding="true">
+  <ion-content padding="true"
+               class="has-tabs">
     <div class="list">
       <a ng-repeat="program in vm.programs"
+         ui-sref="nav.schedule.upcoming({id: program.programId})"
          class="item item-text-wrap item-thumbnail-left">
         <img ng-src="../img/{{ program.sport }}.jpg">
         <h2>{{ program.name }}</h2>

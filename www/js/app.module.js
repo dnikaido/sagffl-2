@@ -28,7 +28,7 @@
       });
   }
 
-  function configIonic($ionicPlatform) {
+  function configIonic($ionicPlatform, $ionicConfig) {
     $ionicPlatform.ready(function() {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -39,6 +39,11 @@
         StatusBar.styleDefault();
       }
     });
+
+    $ionicConfig.backButton.text('');
+    $ionicConfig.backButton.previousTitleText('');
+    $ionicConfig.tabs.position('bottom');
+
   }
 })();
 

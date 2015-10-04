@@ -1,0 +1,20 @@
+<ion-list class="list card">
+  <ion-item ng-repeat="game in vm.schedule.games | filter: { type : vm.typePlayed }"
+            class="item-text-wrap">
+    <h3>
+      <span ng-class="{ winner : game.team1Result==='WIN' }">
+        {{ game.team1 }}
+      </span>
+      vs.
+    </h3>
+    <h3>
+      <span ng-class="{ winner : game.team2Result==='WIN' }">
+        {{ game.team2 }}
+      </span>
+    </h3>
+    <p>
+      Score {{ game.team1Score }} - {{ game.team2Score }} &nbsp; | &nbsp;
+      Played on {{ game.startTime | date : vm.dateFormat : vm.timeZone }}
+    </p>
+  </ion-item>
+</ion-list>

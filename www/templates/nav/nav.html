@@ -22,12 +22,13 @@
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="main"></ion-nav-view>
-    <div class="tabs">
-      <a ng-repeat="tabItem in vm.tabItems"
-         ui-sref="{{ tabItem.state }}" class="tab-item">
-        {{ tabItem.name }}
-      </a>
-    </div>
+    <ion-tabs delegate-handle="main">
+      <ion-tab ng-repeat="tabItem in vm.tabItems"
+               title="{{ tabItem.name }}"
+               ui-sref="{{ tabItem.state }}"
+               ng-click="vm.selectTab($index)">
+      </ion-tab>
+    </ion-tabs>
   </ion-side-menu-content>
 </ion-side-menus>
 

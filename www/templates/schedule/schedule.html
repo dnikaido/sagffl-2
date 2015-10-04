@@ -1,0 +1,21 @@
+<ion-view title="Schedule">
+  <div class="tabs tabs-top tabs-energized schedule-tabs">
+    <a ui-sref="nav.schedule.upcoming"
+       class="tab-item"
+       ng-class="{ active : vm.$state.includes('nav.schedule.upcoming') }">
+      Upcoming
+    </a>
+    <a ui-sref="nav.schedule.played"
+       class="tab-item"
+       ng-class="{ active : vm.$state.includes('nav.schedule.played') }">
+      Played
+    </a>
+  </div>
+  <ion-content padding="true"
+               class="has-tabs has-top-tabs">
+    <p ng-if="vm.error">
+      {{ vm.error }}
+    </p>
+    <ui-view name="schedule" ng-if="!vm.error"></ui-view>
+  </ion-content>
+</ion-view>

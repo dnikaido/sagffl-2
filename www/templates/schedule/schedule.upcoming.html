@@ -1,0 +1,7 @@
+<ion-list class="list card">
+  <ion-item ng-repeat="game in vm.schedule.games | filter: vm.typeUpcoming"
+            class="item-text-wrap">
+    <h3>{{ game.team1 }} vs. {{ game.team2 }}</h3>
+    <p>{{ game.startTime | date : vm.dateFormat : vm.timeZone }}</p>
+  </ion-item>
+</ion-list>
