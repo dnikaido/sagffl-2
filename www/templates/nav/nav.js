@@ -6,7 +6,7 @@
 
   function NavController($state, Anchor, $ionicTabsDelegate) {
     var vm = this;
-    var visibleTabs = ['nav.announcements', 'nav.programs', 'nav.images'];
+    var visibleTabs = ['nav.home', 'nav.programs', 'nav.images'];
 
     vm.$state = $state;
     vm.menuItems = Anchor.states;

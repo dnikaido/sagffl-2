@@ -23,7 +23,6 @@
       vm.error = null;
       $leagueapps.getSchedule(programId)
         .success(function(response) {
-          $log.debug(response);
           vm.schedule = response;
         })
         .catch(function(error) {
