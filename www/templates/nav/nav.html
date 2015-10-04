@@ -1,30 +1,31 @@
 <ion-side-menus enable-menu-with-back-views="true">
   <ion-side-menu side="left" layout="column">
-    <md-button ui-sref="nav.home"
-               menu-close>Home</md-button>
-    <md-button ui-sref="nav.announcements"
-               menu-close>Announcements</md-button>
-    <md-button ui-sref="nav.images"
-               menu-close>Images</md-button>
+    <ion-content class="stable-bg">
+      <ion-list>
+        <ion-item ng-repeat="menuItem in vm.menuItems"
+                  nav-clear
+                  menu-close
+                  ui-sref="{{ menuItem.state }}">
+          {{ menuItem.name }}
+        </ion-item>
+      </ion-list>
+    </ion-content>
   </ion-side-menu>
   <ion-side-menu-content>
     <ion-nav-bar>
-      <ion-nav-back-button class="button-clear">
-        <md-icon md-svg-icon="chevron-left"></md-icon>
+      <ion-nav-back-button>
       </ion-nav-back-button>
       <ion-nav-buttons side="left">
-        <md-button menu-toggle="left"
+        <button menu-toggle="left"
                    class="button button-icon icon ion-navicon">
-        </md-button>
+        </button>
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="main"></ion-nav-view>
     <div class="tabs">
-      <a ui-sref="nav.announcements" class="tab-item">
-        A
-      </a>
-      <a ui-sref="nav.images" class="tab-item">
-        I
+      <a ng-repeat="tabItem in vm.tabItems"
+         ui-sref="{{ tabItem.state" class="tab-item">
+        {{ tabItem.name }}
       </a>
     </div>
   </ion-side-menu-content>

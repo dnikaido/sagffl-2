@@ -1,9 +1,8 @@
 <ion-view view-title="Images">
   <ion-content>
-    <md-button ng-click="vm.addImage($event)"
-               class="md-fab">
-      <md-icon md-svg-src="plus"></md-icon>
-    </md-button>
+    <button ng-click="vm.addImage()"
+               class="button icon ion-plus">
+    </button>
     <div ng-repeat="image in vm.images">
       <img style="width: 100%;" ng-src="{{ image.$value }}">
     </div>

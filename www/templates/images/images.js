@@ -5,32 +5,36 @@
     .config(configRoute)
     .controller('ImagesController', ImagesController);
 
-  function ImagesController($mdDialog, Images) {
+  function ImagesController($rootScope, $ionicPopup, Images) {
     var vm = this;
 
     vm.addImage = addImage;
     vm.images = Images.getImages();
 
 
-    function addImage(event) {
-      $mdDialog.show({
-        targetEvent: event,
-        templateUrl: 'templates/images/images.add.html',
-        controller: function($scope, $mdDialog) {
-          $scope.submit = function() {
-            if($scope.url) {
-              $mdDialog.hide($scope.url)
-            } else {
-              $mdDialog.cancel();
+    function addImage() {
+      var addScope = $rootScope.$new();
+      addScope.data = {};
+      $ionicPopup.show({
+        template: '<input ng-model="data.url">',
+        title: 'Enter Image URL',
+        scope: addScope,
+        buttons: [
+          {text: 'Cancel'},
+          {
+            text: 'Add',
+            type: 'button-positive',
+            onTap: function (e) {
+              if (!addScope.data.url) {
+                e.preventDefault();
+              } else {
+                return addScope.data.url;
+              }
             }
           }
-          $scope.cancel = function() {
-            $mdDialog.cancel();
-          }
-        }
+        ]
       })
         .then(function(url) {
-          console.log(url);
           Images.addImage(url);
         });
     }
