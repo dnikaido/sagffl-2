@@ -7,7 +7,14 @@
     'firebase'
   ])
     .config(configRoutes)
-    .run(configIonic);
+    .run(configIonic)
+    .run(watchRoutes);
+
+  function watchRoutes($log, $rootScope) {
+    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
+      $log.debug('error changing to state: ' + toState.name + ' error:' + error);
+    });
+  }
 
   function configRoutes($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/home');
@@ -26,6 +33,7 @@
           }
         }
       });
+
   }
 
   function configIonic($ionicPlatform, $ionicConfig) {

@@ -20,6 +20,7 @@
     activate();
 
     function activate() {
+      $log.debug('heyo');
       vm.error = null;
       $leagueapps.getSchedule(programId)
         .success(function(response) {
@@ -34,7 +35,7 @@
   function configRoute($stateProvider) {
     $stateProvider
       .state('nav.schedule', {
-        url: '/schedule/:id',
+        url: 'program/:id/schedule',
         views: {
           'main': {
             templateUrl: 'templates/schedule/schedule.html',

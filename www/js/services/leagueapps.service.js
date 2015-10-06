@@ -12,7 +12,8 @@
     return {
       getAnnouncements: getAnnouncements,
       getPrograms: getPrograms,
-      getSchedule: getSchedule
+      getSchedule: getSchedule,
+      getStandingsSrc: getStandingsSrc
     };
 
     function getAnnouncements() {
@@ -28,6 +29,11 @@
     function getSchedule(programId) {
       return $http.jsonp(url + 'programs/' + programId + '/schedule'
         + apiKey + callback);
+    }
+
+    function getStandingsSrc(programId) {
+      return 'http://sagffl.leagueapps.com/widgets/standingsContent?lid=' + programId;
+
     }
   }
 })();
