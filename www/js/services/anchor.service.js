@@ -14,6 +14,7 @@
       service.states.push(new State('nav.announcements', 'Announcements'));
       service.states.push(new State('nav.images', 'Images', true));
       service.states.push(new State('nav.programs', 'Programs', true));
+      service.states.push(new State('nav.login', 'Login'));
     }
 
     function State(state, name, tab) {

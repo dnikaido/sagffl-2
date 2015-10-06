@@ -4,7 +4,9 @@
   angular.module('sagffl', [
     'sagffl.config',
     'ionic',
-    'firebase'
+    'firebase',
+    'ngStorage',
+    'facebook'
   ])
     .config(configRoutes)
     .run(configIonic)

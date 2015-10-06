@@ -5,7 +5,7 @@
     .config(configRoute)
     .controller('ImagesController', ImagesController);
 
-  function ImagesController($rootScope, $ionicPopup, Images) {
+  function ImagesController($log, $rootScope, $ionicPopup, Images, $facebook) {
     var vm = this;
 
     vm.addImage = addImage;
@@ -13,31 +13,35 @@
 
 
     function addImage() {
-      var addScope = $rootScope.$new();
-      addScope.data = {};
-      $ionicPopup.show({
-        template: '<input ng-model="data.url">',
-        title: 'Enter Image URL',
-        scope: addScope,
-        buttons: [
-          {text: 'Cancel'},
-          {
-            text: 'Add',
-            type: 'button-positive',
-            onTap: function (e) {
-              if (!addScope.data.url) {
-                e.preventDefault();
-              } else {
-                return addScope.data.url;
-              }
-            }
-          }
-        ]
-      })
-        .then(function(url) {
-          Images.addImage(url);
+      $facebook.getAlbums('nav.images')
+        .then(function(response) {
+          $log.debug(response);
         });
-    }
+    //  var addScope = $rootScope.$new();
+      //  addScope.data = {};
+      //  $ionicPopup.show({
+      //    template: '<input ng-model="data.url">',
+      //    title: 'Enter Image URL',
+      //    scope: addScope,
+      //    buttons: [
+      //      {text: 'Cancel'},
+      //      {
+      //        text: 'Add',
+      //        type: 'button-positive',
+      //        onTap: function (e) {
+      //          if (!addScope.data.url) {
+      //            e.preventDefault();
+      //          } else {
+      //            return addScope.data.url;
+      //          }
+      //        }
+      //      }
+      //    ]
+      //  })
+      //    .then(function(url) {
+      //      Images.addImage(url);
+      //    });
+      }
   }
   function configRoute($stateProvider) {
     $stateProvider
