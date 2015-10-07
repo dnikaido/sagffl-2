@@ -16,6 +16,9 @@
       $facebook.getAlbums('nav.images')
         .then(function(response) {
           $log.debug(response);
+        })
+        .catch(function(error) {
+          $log.debug(error);
         });
     //  var addScope = $rootScope.$new();
       //  addScope.data = {};

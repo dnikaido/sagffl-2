@@ -6,11 +6,16 @@
     'ionic',
     'firebase',
     'ngStorage',
-    'facebook'
+    'myFacebook'
   ])
     .config(configRoutes)
     .run(configIonic)
-    .run(watchRoutes);
+    .run(watchRoutes)
+    .run(configStorage);
+
+  function configStorage($localStorage) {
+    $localStorage.$reset();
+  }
 
   function watchRoutes($log, $rootScope) {
     $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {

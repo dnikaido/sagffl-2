@@ -1,13 +1,19 @@
 (function() {
   'use strict';
 
-  angular.module('facebook', [
+  angular.module('myFacebook', [
     'ngCordova',
-    'ngStorage'
+    'ngStorage',
+    'ezfb'
   ])
-    .factory('$facebook', FacebookService);
+    .factory('$facebook', FacebookService)
+    .config(function(ezfbProvider) {
+      ezfbProvider.setInitParams({
+        appId: '400628200140143'
+      });
+    });
 
-  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state) {
+  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q) {
     var CLIENT_ID = '400628200140143';
     var url = 'https://graph.facebook.com/v2.4/';
 
@@ -17,36 +23,88 @@
     };
 
     function login(toState, permissions) {
-      var defaultPermissions = ['public_profile', 'user_photos'];
-      permissions = permissions ? permissions : defaultPermissions;
+      var defaultPermissions = 'public_profile';
+      permissions = permissions
+        ? defaultPermissions + ',' + permissions
+        : defaultPermissions;
 
-      $cordovaOauth.facebook(CLIENT_ID, permissions)
+      $cordovaOauth.facebook(CLIENT_ID, permissions.split(','), { return_scopes: true })
         .then(function(response) {
           $localStorage.accessToken = response.access_token;
-          $state.go(toState);
+          getPermissions()
+            .then(permissionCallback)
+            .catch(function(error) {
+              $log.debug(error);
+            });
         })
         .catch(function(error) {
-          $log.debug(error);
+          /* Only for running in a browser! */
+          if(error==='Cannot authenticate via a web browser') {
+            ezfb.login(null, { scope: permissions })
+              .then(function(response) {
+                $localStorage.accessToken = response.authResponse.accessToken;
+                getPermissions()
+                  .then(permissionCallback)
+                  .catch(function(error) {
+                    $log.debug(error);
+                  });
+              });
+          } else {
+            $log.debug(error);
+          }
         });
+      function permissionCallback(response) {
+        $localStorage.permissions = response.data.data;
+        $state.go(toState, {}, {
+          reload : true
+        });
+      }
+    }
+
+    function getPermissions() {
+      var permissionsUrl = url + 'me/permissions';
+
+      return $http.get(permissionsUrl, {
+        params: {
+          access_token : $localStorage.accessToken
+        }
+      });
     }
 
     function getAlbums(toState) {
       var albumUrl = url + 'me';
       var fields = 'albums{cover_photo,name,created_time}';
 
-      if($localStorage.hasOwnProperty('accessToken') === true) {
+      if(checkLogin() && checkPermissions(['user_photos'])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
-            access_token: $localStorage.accessToken
+            access_token : $localStorage.accessToken
           }
-        })
-          .catch(function(error) {
-            $log.debug(error);
-          });
+        });
       } else {
-        $state.go('/login', { toState : toState });
+        $state.go('nav.login', {
+          toState : toState,
+          permissions : 'user_photos'
+        });
+        return $q.reject('not logged in');
       }
+    }
 
+    function checkLogin() {
+      return $localStorage.hasOwnProperty('accessToken') === true;
+    }
+
+    function checkPermissions(permissions) {
+      if($localStorage.hasOwnProperty('permissions') === true) {
+        var grantedPermissions =
+          $localStorage.permissions.filter(function(permission) {
+            return permissions.indexOf(permission.permission) >= 0
+              && permission.status === 'granted';
+          });
+        return grantedPermissions.length === permissions.length;
+      } else {
+        return false;
+      }
     }
   }
 })();

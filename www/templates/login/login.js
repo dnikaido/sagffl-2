@@ -7,18 +7,19 @@
 
   function LoginController($facebook, $stateParams) {
     var toState = $stateParams.toState ? $stateParams.toState : 'nav.home';
+    var permissions = $stateParams.permissions ? $stateParams.permissions : null;
 
     activate();
 
     function activate() {
-      $facebook.login(toState);
+      $facebook.login(toState, permissions);
     }
 
   }
   function configRoute($stateProvider) {
     $stateProvider
       .state('nav.login', {
-        url: '/login/:toState',
+        url: '/login/:toState/:permissions',
         cache: false,
         views: {
           'main': {
