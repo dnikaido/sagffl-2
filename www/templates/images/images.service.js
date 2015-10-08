@@ -17,8 +17,8 @@
       return imageFire;
     }
 
-    function addImage(url) {
-      imageFire.$add(url);
+    function addImage(image) {
+      imageFire.$add(image);
     }
   }
 })();

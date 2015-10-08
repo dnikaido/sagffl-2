@@ -11,6 +11,7 @@
     "jquery": "~2.1.4",
     "ngstorage": "~0.3.9",
     "ngCordova": "~0.1.20-alpha",
-    "angular-easyfb": "~1.4.1"
+    "angular-easyfb": "~1.4.1",
+    "underscore": "~1.8.3"
   }
 }

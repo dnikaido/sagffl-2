@@ -19,7 +19,9 @@
 
     return {
       login : login,
-      getAlbums : getAlbums
+      getAlbums : getAlbums,
+      getAlbumPhotos : getAlbumPhotos,
+      getPhoto : getPhoto
     };
 
     function login(toState, permissions) {
@@ -73,10 +75,48 @@
 
     function getAlbums(toState) {
       var albumUrl = url + 'me';
-      var fields = 'albums{cover_photo,name,created_time}';
+      var fields = 'albums{picture,name,created_time},name';
 
       if(checkLogin() && checkPermissions(['user_photos'])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
+          params: {
+            access_token : $localStorage.accessToken
+          }
+        });
+      } else {
+        $state.go('nav.login', {
+          toState : toState,
+          permissions : 'user_photos'
+        });
+        return $q.reject('not logged in');
+      }
+    }
+
+    function getAlbumPhotos(albumId, toState) {
+      var albumUrl = url + albumId;
+      var fields = 'photos{picture}';
+
+      if(checkLogin() && checkPermissions(['user_photos'])) {
+        return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
+          params: {
+            access_token : $localStorage.accessToken
+          }
+        });
+      } else {
+        $state.go('nav.login', {
+          toState : toState,
+          permissions : 'user_photos'
+        });
+        return $q.reject('not logged in');
+      }
+    }
+
+    function getPhoto(photoId, toState) {
+      var photoUrl = url + photoId;
+      var fields = 'images';
+
+      if(checkLogin() && checkPermissions(['user_photos'])) {
+        return $http.get(photoUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
             access_token : $localStorage.accessToken
           }

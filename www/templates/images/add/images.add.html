@@ -1,0 +1,32 @@
+<ion-view title="Albums">
+  <ion-content id="albums-content"
+               scroll="false"
+               class="has-tabs">
+    <div class="row">
+      <div class="col col-33">
+        <ion-scroll class="album-cover-scroll">
+          <div class="list">
+            <a ng-repeat="album in vm.albums.data | orderBy: '-created_time'"
+               class="item album-list"
+               ng-click="vm.selectAlbum(album.id)">
+              <div class="album-cover">
+                <img ng-src="{{ album.picture.data.url }}">
+              </div>
+              <p>{{ album.name }}</p>
+            </a>
+          </div>
+        </ion-scroll>
+      </div>
+      <div class="col col-67">
+        <ion-scroll delegate-handle="photos"
+                    class="album-photo-scroll">
+          <div ng-repeat="photo in vm.photos.data"
+               class="album-photo"
+               on-hold="vm.selectPhoto(photo)">
+            <img ng-src="{{ photo.picture }}">
+          </div>
+        </ion-scroll>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
