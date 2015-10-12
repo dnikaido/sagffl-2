@@ -19,8 +19,11 @@
       $facebook.getAlbums('nav.images-add')
         .then(function(response) {
           vm.albums = response.data.albums;
-          vm.username = response.data.name;
           setScrollHeight();
+          $facebook.getCurrentUser('nav.images-add', true)
+            .then(function(response) {
+              vm.username = response.data.name;
+            });
         })
         .catch(function(error) {
           $log.debug(error);

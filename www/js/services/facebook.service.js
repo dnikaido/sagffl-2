@@ -4,7 +4,8 @@
   angular.module('myFacebook', [
     'ngCordova',
     'ngStorage',
-    'ezfb'
+    'ezfb',
+    'ionic'
   ])
     .factory('$facebook', FacebookService)
     .config(function(ezfbProvider) {
@@ -13,7 +14,7 @@
       });
     });
 
-  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q) {
+  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q, $rootScope) {
     var CLIENT_ID = '400628200140143';
     var url = 'https://graph.facebook.com/v2.4/';
 
@@ -21,10 +22,11 @@
       login : login,
       getAlbums : getAlbums,
       getAlbumPhotos : getAlbumPhotos,
-      getPhoto : getPhoto
+      getPhoto : getPhoto,
+      getCurrentUser : getCurrentUser
     };
 
-    function login(toState, permissions) {
+    function login(toState, params, permissions) {
       var defaultPermissions = 'public_profile';
       permissions = permissions
         ? defaultPermissions + ',' + permissions
@@ -33,6 +35,7 @@
       $cordovaOauth.facebook(CLIENT_ID, permissions.split(','), { return_scopes: true })
         .then(function(response) {
           $localStorage.accessToken = response.access_token;
+          getCurrentUser();
           getPermissions()
             .then(permissionCallback)
             .catch(function(error) {
@@ -45,6 +48,7 @@
             ezfb.login(null, { scope: permissions })
               .then(function(response) {
                 $localStorage.accessToken = response.authResponse.accessToken;
+                getCurrentUser();
                 getPermissions()
                   .then(permissionCallback)
                   .catch(function(error) {
@@ -57,10 +61,35 @@
         });
       function permissionCallback(response) {
         $localStorage.permissions = response.data.data;
-        $state.go(toState, {}, {
-          reload : true
+        $rootScope.$emit(toState);
+        $state.go(toState, params, { reload : true });
+      }
+    }
+
+    function getCurrentUser(toState, forceLogin) {
+      if(checkLogin()) {
+        if($localStorage.hasOwnProperty('username')===true) {
+          var response = {
+            data : { name : $localStorage.username }
+          };
+          return $q.resolve(response);
+        }
+        var userUrl = url + 'me';
+        return $http.get(userUrl, {
+          params: {
+            access_token : $localStorage.accessToken
+          }
+        })
+          .then(function(response) {
+            $localStorage.username = response.data.name;
+            return response;
+          });
+      } else if(toState && forceLogin) {
+        $state.go('nav.login', {
+          toState: toState
         });
       }
+      return $q.reject('not logged in');
     }
 
     function getPermissions() {
@@ -75,7 +104,7 @@
 
     function getAlbums(toState) {
       var albumUrl = url + 'me';
-      var fields = 'albums{picture,name,created_time},name';
+      var fields = 'albums{picture,name,created_time}';
 
       if(checkLogin() && checkPermissions(['user_photos'])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {

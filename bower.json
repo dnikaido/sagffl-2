@@ -12,6 +12,7 @@
     "ngstorage": "~0.3.9",
     "ngCordova": "~0.1.20-alpha",
     "angular-easyfb": "~1.4.1",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "ng-material-floating-button": "ng-mfb#~0.6.2"
   }
 }

@@ -1,0 +1,31 @@
+<ion-view title="{{ comment.image.title }}">
+  <ion-content class="has-tabs">
+    <div class="item item-body">
+      <div class="image-container">
+        <img class="short-image"
+             ng-src="{{ comment.image.url }}"
+             ng-click="comment.gallery.showImage(comment.image)">
+      </div>
+      <p class="subdued">Submitted by {{ comment.image.uploader }}</p>
+      <p>
+        <span class="subdued">{{ comment.image.votes.length || '0' }} Votes</span>
+        <span class="subdued">{{ comment.image.comments.length || '0'}} Comments</span>
+      </p>
+    </div>
+    <div ng-repeat="post in comment.image.comments"
+         class="item item-body">
+      {{ post.username }}: {{ post.text }}
+    </div>
+    <div ng-if="comment.username"
+         class="item item-body">
+      <input ng-model="comment.text">
+      <button ng-click="comment.add()"
+              class="button button-primary">Submit</button>
+    </div>
+    <div ng-if="!comment.username"
+         class="item item-body">
+      <button ng-click="comment.login()"
+              class="button button-primary">Please log in to comment</button>
+    </div>
+  </ion-content>
+</ion-view>

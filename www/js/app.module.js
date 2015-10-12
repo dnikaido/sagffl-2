@@ -6,6 +6,7 @@
     'ionic',
     'firebase',
     'ngStorage',
+    'ng-mfb',
     'myFacebook'
   ])
     .config(configRoutes)
