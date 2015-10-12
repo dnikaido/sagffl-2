@@ -4,63 +4,52 @@
   angular.module('sagffl')
     .factory('Gallery', GalleryService);
 
-  function GalleryService($rootScope, $ionicModal, $ionicScrollDelegate, $ionicSlideBoxDelegate) {
+  function GalleryService($rootScope, $ionicModal, $ionicScrollDelegate) {
     var $scope = $rootScope.$new();
+    var $this = this;
 
-    $scope.activeSlide = '';
-    $scope.lastPosition = {};
-    $scope.modal = {};
+    $this.closeable = false;
+    $this.modal = null;
+    $this.showModal = showModal;
+    $this.lastPosition = {};
+
     $scope.zoomMin = 1;
     $scope.showImage = showImage;
-    $scope.showImages = showImages;
-    $scope.showModal = showModal;
     $scope.closeModal = closeModal;
     $scope.closeable = false;
-    $scope.updateSlideStatus = updateSlideStatus;
-    $scope.images = [];
+    $scope.updateStatus = updateStatus;
+    $scope.image = {};
 
     return $scope;
 
-    function showImages(index) {
-      $scope.activeSlide = index;
-      $scope.showModal('templates/images/gallery/images.gallery.html');
-    }
-
     function showImage(image) {
-      $scope.images = [image];
-      $scope.activeSlide = 0;
-      $scope.showModal('templates/images/gallery/images.gallery.html');
+      $scope.image = image;
+      $this.showModal('templates/images/gallery/images.gallery.html');
     }
 
     function showModal(templateUrl) {
       $ionicModal.fromTemplateUrl(templateUrl, {
-        scope: this
+        scope: $scope
       }).then(function(modal) {
-        $scope.modal = modal;
-        $scope.modal.show();
+        $this.modal = modal;
+        $this.modal.show();
       });
     }
 
     function closeModal() {
-      var slideBox = $ionicSlideBoxDelegate._instances[0];
-      if(!slideBox.slideIsDisabled && slideBox.closeable) {
-        $scope.modal.hide();
-        $scope.modal.remove()
+      if($this.closeable) {
+        $this.modal.hide();
+        $this.modal.remove()
       }
     }
 
-    function updateSlideStatus(slide) {
-      var scroll = _.findWhere($ionicScrollDelegate._instances, { $$delegateHandle : 'scrollHandle' + slide });
-      var slideBox = $ionicSlideBoxDelegate._instances[0];
+    function updateStatus() {
+      var scroll = _.findWhere($ionicScrollDelegate._instances, { $$delegateHandle : 'scrollHandle'});
       var currentPosition = scroll.getScrollPosition();
       var checkZoomPosition = currentPosition.zoom == $scope.zoomMin;
-      slideBox.closeable = _.isEqual(currentPosition, $scope.lastPosition);
-      if (checkZoomPosition) {
-        slideBox.enableSlide(true);
-      } else {
-        slideBox.enableSlide(false);
-      }
-      $scope.lastPosition = scroll.getScrollPosition();
+      var checkLastPosition= _.isEqual(currentPosition, $this.lastPosition);
+      $this.closeable = !!(checkZoomPosition || checkLastPosition);
+      $this.lastPosition = scroll.getScrollPosition();
     }
   }
 

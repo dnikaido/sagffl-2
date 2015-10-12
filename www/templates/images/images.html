@@ -13,7 +13,7 @@
       <div class="item item-body">
         <img class="full-image"
              ng-src="{{ image.url }}"
-             ng-click="vm.gallery.showImages($index)">
+             ng-click="vm.gallery.showImage(image)">
         <p class="subdued">Submitted by {{ image.uploader }}</p>
         <p>
           <span class="subdued">{{ image.votes.length || '0' }} Votes</span>

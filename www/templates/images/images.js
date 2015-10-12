@@ -28,8 +28,6 @@
         .then(function(response) {
           vm.username = response.data.name;
         });
-
-      vm.gallery.images = vm.images;
     }
 
     function addImage() {
