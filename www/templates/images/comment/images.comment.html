@@ -12,20 +12,31 @@
         <span class="subdued">{{ comment.image.comments.length || '0'}} Comments</span>
       </p>
     </div>
-    <div ng-repeat="post in comment.image.comments"
+    <div ng-repeat="post in comment.image.comments | orderBy: 'timestamp'"
          class="item item-body">
-      {{ post.username }}: {{ post.text }}
-    </div>
-    <div ng-if="comment.username"
-         class="item item-body">
-      <input ng-model="comment.text">
-      <button ng-click="comment.add()"
-              class="button button-primary">Submit</button>
+      <div class="comment-subtext">
+        {{ post.username }}
+        <span class="comment-time">{{ comment.getFromNow(post.timestamp) }}</span>
+      </div>
+      <div class="comment-post">
+        {{ post.text }}
+      </div>
     </div>
     <div ng-if="!comment.username"
          class="item item-body">
       <button ng-click="comment.login()"
-              class="button button-primary">Please log in to comment</button>
+              class="button button-block button-positive">Log in to comment</button>
     </div>
+    <div ng-if="comment.username"
+         class="item item-input-inset">
+      <label class="item-input-wrapper">
+        <input ng-model="comment.text"
+               type="text"
+               placeholder="Write a comment">
+      </label>
+      <button ng-click="comment.add()"
+              class="button button-icon icon ion-paper-airplane"></button>
+    </div>
+
   </ion-content>
 </ion-view>

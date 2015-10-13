@@ -6,8 +6,8 @@
 
   function ImagesAddController($log, $facebook, $document, $rootScope, $ionicPopup, Images, $state, $ionicScrollDelegate) {
     var vm = this;
-    var duplicateError = 'That photo has already been submitted. Please choose another.';
-    var submitError = 'There was an upload error. Sad face.';
+    var duplicateError = 'Oops! That photo has already been submitted. Please choose another.';
+    var submitError = 'Oops! There was an upload error. Sad face.';
 
     vm.albums = {};
     vm.photos = {};
@@ -115,7 +115,11 @@
           };
           if(validatePhoto(uploadPhoto)) {
             if(!duplicatePhoto(uploadPhoto)) {
-              Images.addImage(uploadPhoto);
+              Images.addImage(uploadPhoto)
+                .catch(function(error) {
+                  $log.debug(error);
+                  errorPopup(submitError);
+                });
               $state.go('nav.images');
             } else {
               errorPopup(duplicateError);

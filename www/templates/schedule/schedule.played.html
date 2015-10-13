@@ -1,5 +1,5 @@
 <ion-list class="list card">
-  <ion-item ng-repeat="game in vm.schedule.games | filter: { type : vm.typePlayed }"
+  <ion-item ng-repeat="game in vm.schedule.games | filter: { type : vm.typePlayed } | orderBy: '-startTime'"
             class="item-text-wrap">
     <h3>
       <span ng-class="{ winner : game.team1Result==='WIN' }">

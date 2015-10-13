@@ -16,19 +16,22 @@
     };
   }
 
-  function CommentsController(Gallery, imagesResolve, $stateParams, Images, $facebook, $state) {
+  function CommentsController($log, Gallery, imagesResolve, $stateParams, Images, $facebook, $state, $ionicPopup) {
     var comment = this;
+    var commentError = 'Oops! Something happened trying to submit your comment. Please try again.';
 
     comment.image = {};
-    comment.gallery = Gallery;
     comment.text = '';
+    comment.username = null;
+    comment.gallery = Gallery;
     comment.add = add;
     comment.login = login;
-    comment.username = null;
+    comment.getFromNow = getFromNow;
 
     activate();
 
     function activate() {
+      $log.debug('activate');
       $facebook.getCurrentUser()
         .then(function(response) {
           comment.username = response.data.name;
@@ -37,10 +40,22 @@
     }
 
     function add() {
-      Images.addComment(comment.image, comment.text, comment.username)
-        .then(function() {
-          comment.text = '';
-        });
+      if(comment.text) {
+        Images.addComment(comment.image, comment.text, comment.username)
+          .then(function() {
+            comment.text = '';
+          })
+          .catch(function(error) {
+            $log.debug(error);
+            errorPopup(commentError);
+          });
+      }
+
+    }
+
+    function getFromNow(timestamp) {
+      var commentTime = moment(timestamp);
+      return commentTime.fromNow();
     }
 
     function login() {
@@ -49,6 +64,13 @@
         options: {key: comment.image.$id}
       };
       $state.go('nav.login', loginParams)
+    }
+
+    function errorPopup(message) {
+      $ionicPopup.alert({
+        title: 'Couldn\'t submit...',
+        template: message
+      });
     }
   }
 

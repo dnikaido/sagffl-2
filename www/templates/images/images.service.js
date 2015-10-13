@@ -19,7 +19,8 @@
     function addComment(image, text, username) {
       var comment = {
         text : text,
-        username : username
+        username : username,
+        timestamp :  Firebase.ServerValue.TIMESTAMP
       };
       if(image.hasOwnProperty('comments')===false) {
         image.comments = [comment];
@@ -38,6 +39,7 @@
     }
 
     function addImage(image) {
+      image.timestamp = Firebase.ServerValue.TIMESTAMP;
       return imageFire.$add(image);
     }
 
