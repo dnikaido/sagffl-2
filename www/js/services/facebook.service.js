@@ -14,7 +14,7 @@
       });
     });
 
-  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q, $rootScope) {
+  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q) {
     var CLIENT_ID = '400628200140143';
     var url = 'https://graph.facebook.com/v2.4/';
 
@@ -61,7 +61,6 @@
         });
       function permissionCallback(response) {
         $localStorage.permissions = response.data.data;
-        $rootScope.$emit(toState);
         $state.go(toState, params, { reload : true });
       }
     }

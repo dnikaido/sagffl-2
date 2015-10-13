@@ -8,15 +8,17 @@
   function ImagesController($log, Images, $state, $facebook, $filter, imagesResolve, Gallery, $rootScope) {
     var vm = this;
 
+    vm.images = [];
+    vm.username = null;
+
     vm.addImage = addImage;
     vm.currentVote = currentVote;
     vm.countVotes = countVotes;
     vm.comment = comment;
-    vm.images = orderImages(imagesResolve);
     vm.gallery = Gallery;
     vm.toggleVote = toggleVote;
-    vm.username = null;
 
+    //workaround to call activate without having to remove the scope from the cache
     $rootScope.$on('nav.images', function() {
       activate();
     });
@@ -28,6 +30,7 @@
         .then(function(response) {
           vm.username = response.data.name;
         });
+      vm.images = orderImages(imagesResolve)
     }
 
     function addImage() {
@@ -78,7 +81,10 @@
       .state('nav.images', {
         url: '/images',
         resolve: {
-          imagesResolve : imageResolve
+          imagesResolve : imagesResolve
+        },
+        onEnter: function($rootScope) {
+          $rootScope.$broadcast('nav.images');
         },
         views: {
           'main': {
@@ -101,7 +107,7 @@
         url: '/images/comment/:key',
         cache: false,
         resolve: {
-          imagesResolve : imageResolve
+          imagesResolve : imagesResolve
         },
         views: {
           'main': {
@@ -112,8 +118,8 @@
       })
   }
 
-  function imageResolve(Images) {
-    return Images.getImages();
+  function imagesResolve(Images) {
+    return Images.getImagesPromise();
   }
 })();
 

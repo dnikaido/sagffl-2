@@ -12,6 +12,7 @@
       addComment : addComment,
       addImage : addImage,
       getImages : getImages,
+      getImagesPromise : getImagesPromise,
       toggleVote : toggleVote
     };
 
@@ -25,15 +26,19 @@
       } else {
         image.comments.push(comment);
       }
-      imageFire.$save(image);
+      return imageFire.$save(image);
     }
 
-    function getImages() {
+    function getImagesPromise() {
       return imageFire.$loaded();
     }
 
+    function getImages() {
+      return imageFire;
+    }
+
     function addImage(image) {
-      imageFire.$add(image);
+      return imageFire.$add(image);
     }
 
     function toggleVote(image, username) {

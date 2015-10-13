@@ -37,7 +37,10 @@
     }
 
     function add() {
-      Images.addComment(comment.image, comment.text, comment.username);
+      Images.addComment(comment.image, comment.text, comment.username)
+        .then(function() {
+          comment.text = '';
+        });
     }
 
     function login() {

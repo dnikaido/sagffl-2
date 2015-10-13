@@ -1,6 +1,3 @@
 TODO:
 
-Refresh images after adding and scroll to image
-Change how add images are selected
-Don't allow duplicate images
-Remove comment text after submit
+Scroll to image after adding

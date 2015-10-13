@@ -6,12 +6,16 @@
 
   function ImagesAddController($log, $facebook, $document, $rootScope, $ionicPopup, Images, $state, $ionicScrollDelegate) {
     var vm = this;
+    var duplicateError = 'That photo has already been submitted. Please choose another.';
+    var submitError = 'There was an upload error. Sad face.';
 
     vm.albums = {};
     vm.photos = {};
+    vm.username = '';
+    vm.selectedPhoto = '';
+    vm.clickPhoto = clickPhoto;
     vm.selectAlbum = selectAlbum;
     vm.selectPhoto = selectPhoto;
-    vm.username = '';
 
     activate();
 
@@ -30,10 +34,19 @@
         });
     }
 
+    function clickPhoto(photo, index) {
+      if(vm.selectedPhoto===index) {
+        selectPhoto(photo);
+      } else {
+        vm.selectedPhoto = index;
+      }
+    }
+
     function selectAlbum(albumId) {
       $facebook.getAlbumPhotos(albumId, 'nav.images-add')
         .then(function(response) {
           vm.photos = response.data.photos;
+          vm.selectedPhoto = '';
           $ionicScrollDelegate.$getByHandle('photos').scrollTop(false);
         })
         .catch(function(error) {
@@ -101,23 +114,40 @@
             uploader : vm.username
           };
           if(validatePhoto(uploadPhoto)) {
-            Images.addImage(uploadPhoto);
+            if(!duplicatePhoto(uploadPhoto)) {
+              Images.addImage(uploadPhoto);
+              $state.go('nav.images');
+            } else {
+              errorPopup(duplicateError);
+            }
           } else {
-            $log.debug('error validating photo upload');
+            errorPopup(submitError);
           }
-          $state.go('nav.images');
-
         })
         .catch(function(error) {
           $log.debug(error);
         });
     }
 
+    function errorPopup(message) {
+      $ionicPopup.alert({
+        title: 'Couldn\'t submit...',
+        template: message
+      });
+    }
+
     function validatePhoto(photo) {
-      return photo.url !== 'undefined' && photo.url !== null
+      var validPhoto = photo.url !== 'undefined' && photo.url !== null
         && photo.zoomUrl !== 'undefined' && photo.zoomUrl !== null
         && photo.title !== 'undefined' && photo.title !== null
         && photo.uploader !== 'undefined' && photo.uploader !== null;
+      return validPhoto;
+    }
+
+    function duplicatePhoto(photo) {
+      return _.some(Images.getImages(), function(image) {
+        return photo.url===image.url;
+      });
     }
   }
 })();

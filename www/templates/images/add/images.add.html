@@ -22,6 +22,8 @@
                     class="album-photo-scroll">
           <div ng-repeat="photo in vm.photos.data"
                class="album-photo"
+               ng-class="{ selected : vm.selectedPhoto===$index }"
+               ng-click="vm.clickPhoto(photo, $index)"
                on-hold="vm.selectPhoto(photo)">
             <img ng-src="{{ photo.picture }}">
           </div>
