@@ -5,7 +5,7 @@
     .config(configRoute)
     .controller('ImagesController', ImagesController);
 
-  function ImagesController($log, Images, $state, $facebook, $filter, imagesResolve, Gallery, $rootScope) {
+  function ImagesController($log, Images, $state, $facebook, $filter, Gallery, $rootScope) {
     var vm = this;
 
     vm.images = [];
@@ -30,7 +30,10 @@
         .then(function(response) {
           vm.username = response.data.name;
         });
-      vm.images = orderImages(imagesResolve)
+      Images.getImagesPromise()
+        .then(function(images) {
+          vm.images = orderImages(images);
+        });
     }
 
     function addImage() {
@@ -80,9 +83,6 @@
     $stateProvider
       .state('nav.images', {
         url: '/images',
-        resolve: {
-          imagesResolve : imagesResolve
-        },
         onEnter: function($rootScope) {
           $rootScope.$broadcast('nav.images');
         },
@@ -106,9 +106,6 @@
       .state('nav.images-comment', {
         url: '/images/comment/:key',
         cache: false,
-        resolve: {
-          imagesResolve : imagesResolve
-        },
         views: {
           'main': {
             templateUrl: 'templates/images/comment/images.comment.html',
@@ -116,10 +113,6 @@
           }
         }
       })
-  }
-
-  function imagesResolve(Images) {
-    return Images.getImagesPromise();
   }
 })();
 

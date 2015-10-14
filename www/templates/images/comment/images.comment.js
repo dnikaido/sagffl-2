@@ -16,7 +16,7 @@
     };
   }
 
-  function CommentsController($log, Gallery, imagesResolve, $stateParams, Images, $facebook, $state, $ionicPopup) {
+  function CommentsController($log, Gallery, $stateParams, Images, $facebook, $state, $ionicPopup) {
     var comment = this;
     var commentError = 'Oops! Something happened trying to submit your comment. Please try again.';
 
@@ -36,7 +36,10 @@
         .then(function(response) {
           comment.username = response.data.name;
         });
-      comment.image = imagesResolve.$getRecord($stateParams.key);
+      Images.getImagesPromise()
+        .then(function(images) {
+          comment.image = images.$getRecord($stateParams.key);
+        });
     }
 
     function add() {
@@ -50,7 +53,6 @@
             errorPopup(commentError);
           });
       }
-
     }
 
     function getFromNow(timestamp) {
