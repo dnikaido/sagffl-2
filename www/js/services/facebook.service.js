@@ -101,7 +101,7 @@
       });
     }
 
-    function getAlbums(toState) {
+    function getAlbums(toState, options) {
       var albumUrl = url + 'me';
       var fields = 'albums{picture,name,created_time}';
 
@@ -114,6 +114,7 @@
       } else {
         $state.go('nav.login', {
           toState : toState,
+          options : options,
           permissions : 'user_photos'
         });
         return $q.reject('not logged in');

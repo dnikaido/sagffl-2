@@ -3,9 +3,11 @@
                class="has-tabs">
     <div class="list">
       <a ng-repeat="program in vm.programs"
-         ui-sref="nav.program({id: program.programId})"
+         ui-sref="nav.schedule.upcoming({id : program.programId})"
          class="item item-text-wrap item-thumbnail-left">
-        <img ng-src="../img/{{ program.sport }}.jpg">
+      <!--ui-sref="nav.program({id: program.programId})"-->
+
+      <img ng-src="../img/{{ program.sport }}.jpg">
         <h2>{{ program.name }}</h2>
         <p class="wrap">{{ program.scheduleDays }} {{ program.scheduleTimes }} @ {{ program.location }}</p>
       </a>

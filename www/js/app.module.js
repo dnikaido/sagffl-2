@@ -31,17 +31,7 @@
         abstract: true,
         templateUrl: 'templates/nav/nav.html',
         controller: 'NavController as vm'
-      })
-      .state('nav.home', {
-        url: '/home',
-        views: {
-          'main': {
-            templateUrl: 'templates/home/home.html',
-            controller: 'HomeController as vm'
-          }
-        }
       });
-
   }
 
   function configIonic($ionicPlatform, $ionicConfig) {
@@ -59,6 +49,7 @@
     $ionicConfig.backButton.text('');
     $ionicConfig.backButton.previousTitleText('');
     $ionicConfig.tabs.position('bottom');
+    $ionicConfig.views.forwardCache(true);
 
   }
 })();

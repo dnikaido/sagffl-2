@@ -1,4 +1,5 @@
-<ion-side-menus enable-menu-with-back-views="true">
+<ion-side-menus delegate-handle="side"
+                enable-menu-with-back-views="true">
   <ion-side-menu side="left" layout="column">
     <ion-content class="stable-bg">
       <ion-list>
@@ -25,7 +26,6 @@
     <ion-tabs delegate-handle="main">
       <ion-tab ng-repeat="tabItem in vm.tabItems"
                title="{{ tabItem.name }}"
-               ui-sref="{{ tabItem.state }}"
                ng-click="vm.selectTab($index)">
       </ion-tab>
     </ion-tabs>

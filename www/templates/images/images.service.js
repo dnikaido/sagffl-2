@@ -5,16 +5,42 @@
     .factory('Images', ImagesService);
 
   function ImagesService($firebaseArray) {
-    var imageRef = new Firebase('https://glowing-torch-8356.firebaseio.com/images'),
-        imageFire = $firebaseArray(imageRef);
+    var firebaseUrl = 'https://glowing-torch-8356.firebaseio.com/';
+    var categoriesRef = new Firebase(firebaseUrl + 'categories');
+    var categories = $firebaseArray(categoriesRef);
+    var imageArrays = {};
+    var imageArraysLoaded = false;
+    var imageCategoryXref = {};
+
+    setImageArrays();
 
     return {
       addComment : addComment,
       addImage : addImage,
+      getCategory : getCategory,
+      getCategories : getCategories,
+      getImage : getImage,
       getImages : getImages,
-      getImagesPromise : getImagesPromise,
       toggleVote : toggleVote
     };
+
+    function setImageArrays() {
+      getCategories()
+        .then(function(categories) {
+          _.each(categories, function(category) {
+            var imageRef = new Firebase(firebaseUrl + 'categories/' + category.$id + '/images');
+            var imageArray = $firebaseArray(imageRef);
+            imageArrays[category.$id] = imageArray;
+            imageArray.$loaded()
+              .then(function(images) {
+                _.each(images, function(image) {
+                  imageCategoryXref[image.$id] = category.$id;
+                });
+              });
+          });
+          imageArraysLoaded = true;
+        });
+    }
 
     function addComment(image, text, username) {
       var comment = {
@@ -27,20 +53,48 @@
       } else {
         image.comments.push(comment);
       }
-      return imageFire.$save(image);
+      return saveImage(image);
     }
 
-    function getImagesPromise() {
-      return imageFire.$loaded();
-    }
-
-    function getImages() {
-      return imageFire;
-    }
-
-    function addImage(image) {
+    function addImage(image, categoryIndex) {
       image.timestamp = Firebase.ServerValue.TIMESTAMP;
-      return imageFire.$add(image);
+      var category = getCategory(categoryIndex);
+      var imageArray = imageArrays[category.$id];
+      return imageArray.$add(image)
+        .then(function(imageRef) {
+          imageCategoryXref[imageRef.key()] = category.$id;
+          return imageRef;
+        });
+    }
+
+    function getCategory(categoryIndex) {
+      return categories.$getRecord(getCategoryId(categoryIndex));
+    }
+
+    function getCategories() {
+      return categories.$loaded();
+    }
+
+    function getCategoryId(categoryIndex) {
+      return categories.$keyAt(categoryIndex);
+    }
+
+    function getImage(imageKey) {
+      var imageArray = imageArrays[imageCategoryXref[imageKey]];
+      return imageArray.$getRecord(imageKey);
+    }
+
+    function getImages(categoryKey) {
+      if(imageArraysLoaded) {
+        return imageArrays[categoryKey].$loaded();
+      } else {
+        return $q.reject('image arrays not loaded');
+      }
+    }
+
+    function saveImage(image) {
+      var imageArray = imageArrays[imageCategoryXref[image.$id]];
+      return imageArray.$save(image);
     }
 
     function toggleVote(image, username) {
@@ -55,7 +109,7 @@
           image.votes.push(username);
         }
       }
-      imageFire.$save(image);
+      return saveImage(image);
     }
   }
 })();

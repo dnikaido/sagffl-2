@@ -36,10 +36,7 @@
         .then(function(response) {
           comment.username = response.data.name;
         });
-      Images.getImagesPromise()
-        .then(function(images) {
-          comment.image = images.$getRecord($stateParams.key);
-        });
+      comment.image = Images.getImage($stateParams.key);
     }
 
     function add() {

@@ -4,15 +4,17 @@
   angular.module('sagffl')
     .controller('ImagesAddController', ImagesAddController);
 
-  function ImagesAddController($log, $facebook, $document, $rootScope, $ionicPopup, Images, $state, $ionicScrollDelegate) {
+  function ImagesAddController($log, $facebook, $document, $rootScope, $ionicPopup, Images, $state, $ionicScrollDelegate, $stateParams) {
     var vm = this;
     var duplicateError = 'Oops! That photo has already been submitted. Please choose another.';
     var submitError = 'Oops! There was an upload error. Sad face.';
 
     vm.albums = {};
+    vm.categoryIndex = $stateParams.categoryIndex;
     vm.photos = {};
     vm.username = '';
     vm.selectedPhoto = '';
+
     vm.clickPhoto = clickPhoto;
     vm.selectAlbum = selectAlbum;
     vm.selectPhoto = selectPhoto;
@@ -20,11 +22,11 @@
     activate();
 
     function activate() {
-      $facebook.getAlbums('nav.images-add')
+      $facebook.getAlbums('nav.images-add', { categoryIndex : vm.categoryIndex })
         .then(function(response) {
           vm.albums = response.data.albums;
           setScrollHeight();
-          $facebook.getCurrentUser('nav.images-add', true)
+          $facebook.getCurrentUser('nav.images-add')
             .then(function(response) {
               vm.username = response.data.name;
             });
@@ -115,7 +117,7 @@
           };
           if(validatePhoto(uploadPhoto)) {
             if(!duplicatePhoto(uploadPhoto)) {
-              Images.addImage(uploadPhoto)
+              Images.addImage(uploadPhoto, vm.categoryIndex)
                 .catch(function(error) {
                   $log.debug(error);
                   errorPopup(submitError);
@@ -149,9 +151,13 @@
     }
 
     function duplicatePhoto(photo) {
-      return _.some(Images.getImages(), function(image) {
-        return photo.url===image.url;
-      });
+      var category = Images.getCategory(vm.categoryIndex);
+      if(category) {
+        return _.some(category.images, function(image) {
+          return photo.url===image.url;
+        });
+      }
+
     }
   }
 })();

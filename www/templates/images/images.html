@@ -4,40 +4,11 @@
             resting-icon="ion-plus"
             active-icon="ion-plus">
   </mfb-menu>
-  <ion-content class="has-tabs">
-    <div ng-repeat="image in vm.images track by image.url"
-         class="list card">
-      <div class="item item-divider">
-        {{ image.title }}
-      </div>
-      <div class="item item-body">
-        <img class="full-image"
-             ng-src="{{ image.url }}"
-             ng-click="vm.gallery.showImage(image)">
-        <p class="subdued">Submitted by {{ image.uploader }}</p>
-        <p>
-          <span class="subdued">{{ image.votes.length || '0' }} Votes</span>
-          <span class="subdued">{{ image.comments.length || '0'}} Comments</span>
-        </p>
-      </div>
-      <div class="item tabs tabs-secondary tabs-icon-left">
-        <button class="tab-item button"
-                ng-class="vm.currentVote(image) ? 'button-energized' : 'button-clear'"
-                ng-click="vm.toggleVote(image)">
-          <i class="icon ion-thumbsup"></i>
-          Vote
-        </button>
-        <button class="tab-item button button-clear"
-                ui-sref="nav.images-comment({key : image.$id })">
-          <i class="icon ion-chatbox"></i>
-          Comment
-        </button>
-        <button class="tab-item button button-clear"
-                ng-click="vm.flag(image)">
-          <i class="icon ion-alert-circled"></i>
-          Report
-        </button>
-      </div>
-    </div>
-  </ion-content>
+    <ion-slide-box on-slide-changed="vm.selectCategory($index)"
+                   active-slide="vm.activeCategory"
+                   show-pager="false">
+      <ion-slide ng-repeat="category in vm.categories">
+        <image-category category="category"></image-category>
+      </ion-slide>
+    </ion-slide-box>
 </ion-view>

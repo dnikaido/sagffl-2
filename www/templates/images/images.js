@@ -5,50 +5,47 @@
     .config(configRoute)
     .controller('ImagesController', ImagesController);
 
-  function ImagesController($log, Images, $state, $facebook, $filter, Gallery, $rootScope) {
+  function ImagesController($log, Images, $state, $facebook, Gallery, $ionicSlideBoxDelegate, $scope) {
     var vm = this;
 
-    vm.images = [];
+    vm.activeCategory = 0;
+    vm.categories = [];
+    vm.selectedCategory = null;
     vm.username = null;
 
     vm.addImage = addImage;
     vm.currentVote = currentVote;
-    vm.countVotes = countVotes;
     vm.comment = comment;
     vm.gallery = Gallery;
+    vm.selectCategory = selectCategory;
     vm.toggleVote = toggleVote;
 
-    //workaround to call activate without having to remove the scope from the cache
-    $rootScope.$on('nav.images', function() {
+    $scope.$on('$ionicView.enter', function() {
       activate();
     });
-
-    activate();
 
     function activate() {
       $facebook.getCurrentUser()
         .then(function(response) {
           vm.username = response.data.name;
         });
-      Images.getImagesPromise()
-        .then(function(images) {
-          vm.images = orderImages(images);
+      Images.getCategories()
+        .then(function(categories) {
+          vm.categories = categories;
+          if(!vm.activeCategory) {
+            selectCategory(0);
+          } else {
+            selectCategory(vm.activeCategory);
+          }
         });
     }
 
     function addImage() {
-      $state.go('nav.images-add');
+      $state.go('nav.images-add', { categoryIndex : vm.activeCategory });
     }
 
     function comment(image) {
       $state.go('nav.images-comment', { key : image.$id });
-    }
-
-    function countVotes(image) {
-      if(image.hasOwnProperty('votes')===true) {
-        return image.votes.length;
-      }
-      return 0;
     }
 
     function currentVote(image) {
@@ -57,15 +54,17 @@
       }
     }
 
-    function orderImages(images, newOrder, newReverse) {
-      var order = newOrder ? newOrder : countVotes;
-      var reverse = newReverse ? newReverse : true;
-      return $filter('orderBy')(images, order, reverse);
+    function selectCategory(index) {
+      vm.activeCategory = index;
+      $ionicSlideBoxDelegate.update();
     }
 
     function toggleVote(image) {
       if(vm.username) {
-        Images.toggleVote(image, vm.username);
+        Images.toggleVote(image, vm.username)
+          .catch(function(error) {
+            $log.debug(error);
+          });
       } else {
         $facebook.getCurrentUser('nav.images', true)
           .then(function (response) {
@@ -83,9 +82,6 @@
     $stateProvider
       .state('nav.images', {
         url: '/images',
-        onEnter: function($rootScope) {
-          $rootScope.$broadcast('nav.images');
-        },
         views: {
           'main': {
             templateUrl: 'templates/images/images.html',
@@ -96,6 +92,9 @@
       .state('nav.images-add', {
         url: '/images/add',
         cache: false,
+        params: {
+          categoryIndex : ''
+        },
         views: {
           'main': {
             templateUrl: 'templates/images/add/images.add.html',
