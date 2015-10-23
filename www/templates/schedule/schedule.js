@@ -20,7 +20,6 @@
     activate();
 
     function activate() {
-      $log.debug('heyo');
       vm.error = null;
       $leagueapps.getSchedule(programId)
         .success(function(response) {

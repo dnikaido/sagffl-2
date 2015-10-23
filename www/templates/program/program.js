@@ -17,7 +17,6 @@
     function activate() {
       $leagueapps.getPrograms()
         .success(function(response) {
-            $log.debug(response);
             vm.programs = response;
         })
         .catch(function(error) {

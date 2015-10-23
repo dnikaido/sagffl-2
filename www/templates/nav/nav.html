@@ -6,7 +6,7 @@
         <ion-item ng-repeat="menuItem in vm.menuItems"
                   nav-clear
                   menu-close
-                  ui-sref="{{ menuItem.state }}">
+                  ng-click="vm.selectMenuItem(menuItem)">
           {{ menuItem.name }}
         </ion-item>
       </ion-list>
@@ -14,7 +14,7 @@
   </ion-side-menu>
   <ion-side-menu-content>
     <ion-nav-bar>
-      <ion-nav-back-button>
+      <ion-nav-back-button ng-click="vm.goBack()">
       </ion-nav-back-button>
       <ion-nav-buttons side="left">
         <button menu-toggle="left"
