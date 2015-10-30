@@ -14,7 +14,7 @@
 
     function activate() {
       $leagueapps.getAnnouncements()
-        .success(function(response) {
+        .then(function(response) {
           if(response && response.length > 0) {
             var announcement = response[0];
             if(announcement.message.length > 100) {
@@ -22,8 +22,7 @@
             }
             vm.firstAnnouncement = announcement;
           }
-        })
-        .catch(function(error) {
+        }, function(error) {
           $log.debug(error);
         });
     }

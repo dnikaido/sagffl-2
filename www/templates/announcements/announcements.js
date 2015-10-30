@@ -14,10 +14,9 @@
 
     function activate() {
       $leagueapps.getAnnouncements()
-        .success(function(response) {
+        .then(function(response) {
           vm.announcements = response;
-        })
-        .catch(function(error) {
+        }, function(error) {
           $log.debug(error);
         });
     }

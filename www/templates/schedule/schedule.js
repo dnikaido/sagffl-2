@@ -22,10 +22,9 @@
     function activate() {
       vm.error = null;
       $leagueapps.getSchedule(programId)
-        .success(function(response) {
+        .then(function(response) {
           vm.schedule = response;
-        })
-        .catch(function(error) {
+        }, function(error) {
           $log.debug(error);
           vm.error = errorMessage;
         });

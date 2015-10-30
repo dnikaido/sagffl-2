@@ -17,8 +17,7 @@
       $leagueapps.getStandings(programId)
         .then(function(data) {
           $log.debug(data);
-        })
-        .catch(function(error) {
+        }, function(error) {
           $log.debug(error);
         })
     }
