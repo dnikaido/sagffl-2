@@ -11,6 +11,7 @@
     vm.activeCategory = 0;
     vm.categories = [];
     vm.selectedCategory = null;
+    vm.reloadImages = true;
     vm.username = null;
 
     vm.addImage = addImage;
@@ -37,6 +38,7 @@
           } else {
             selectCategory(vm.activeCategory);
           }
+          vm.reloadImages = true;
         });
     }
 

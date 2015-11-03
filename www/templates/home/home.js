@@ -5,10 +5,11 @@
     .config(configRoute)
     .controller('HomeController', HomeController);
 
-  function HomeController($log, $leagueapps) {
+  function HomeController($log, $leagueapps, Images, $scope, $ionicSlideBoxDelegate) {
     var vm = this;
 
     vm.firstAnnouncement = {};
+    vm.imageSlides = null;
 
     activate();
 
@@ -25,6 +26,13 @@
         }, function(error) {
           $log.debug(error);
         });
+
+      $scope.$on('imageArraysLoaded', function() {
+        var topImages = Images.getTopImages();
+        vm.imageSlides = _.pluck(topImages, 'url');
+        $ionicSlideBoxDelegate.$getByHandle('home').update();
+      });
+
     }
 
     function setPreviewMessage(announcement) {

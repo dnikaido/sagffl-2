@@ -1,14 +1,24 @@
 <ion-view view-title="Home">
   <ion-content padding>
-      <div class="card"
-           ui-sref="nav.announcements">
-        <div class="item item-divider">
-          Latest Announcement
-        </div>
-        <div class="item item-avatar item-text-wrap">
-          <img ng-src="{{ vm.firstAnnouncement.userIconUrl }}">
-          <p ng-bind-html="vm.firstAnnouncement.message"></p>
-        </div>
+    <ion-slide-box delegate-handle="home"
+                   does-continue="true"
+                   show-pager="false"
+                   auto-play="true"
+                   slide-interval="5000"
+                   class="home-slide-box">
+      <ion-slide ng-repeat="image in vm.imageSlides">
+        <img ng-src="{{ image }}" />
+      </ion-slide>
+    </ion-slide-box>
+    <div class="card"
+         ui-sref="nav.announcements">
+      <div class="item item-divider">
+        Latest Announcement
       </div>
+      <div class="item item-avatar item-text-wrap">
+        <img ng-src="{{ vm.firstAnnouncement.userIconUrl }}">
+        <p ng-bind-html="vm.firstAnnouncement.message"></p>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

@@ -6,9 +6,10 @@
   </mfb-menu>
     <ion-slide-box on-slide-changed="vm.selectCategory($index)"
                    active-slide="vm.activeCategory"
-                   show-pager="false">
+                   show-pager="false"
+                   class="images-slide-box">
       <ion-slide ng-repeat="category in vm.categories">
-        <image-category category="category"></image-category>
+        <image-category category="category" reload-images="vm.reloadImages"></image-category>
       </ion-slide>
     </ion-slide-box>
 </ion-view>

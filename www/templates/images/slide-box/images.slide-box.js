@@ -8,16 +8,19 @@
     return {
       templateUrl : 'templates/images/slide-box/images.slide-box.html',
       scope : {
-        category : '='
+        category : '=',
+        reloadImages : '='
       },
-      controller: function($scope, $rootScope, Images, $filter) {
+      controller: function($scope, Images, $filter) {
         $scope.orderedImages = [];
         $scope.vm = $scope.$parent.vm;
 
         $scope.count = count;
 
-        $rootScope.$on('nav.images', function() {
-         activate();
+        $scope.$watch('reloadImages', function(reloadImages) {
+          if(reloadImages) {
+            activate();
+          }
         });
 
         activate();
@@ -26,6 +29,7 @@
           Images.getImages($scope.category.$id)
             .then(function(images) {
               $scope.orderedImages = orderImages(images);
+              $scope.reloadImages = false;
             });
         }
 

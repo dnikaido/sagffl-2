@@ -4,11 +4,12 @@
   angular.module('sagffl')
     .factory('Images', ImagesService);
 
-  function ImagesService($firebaseArray) {
+  function ImagesService($firebaseArray, $rootScope) {
     var firebaseUrl = 'https://glowing-torch-8356.firebaseio.com/';
     var categoriesRef = new Firebase(firebaseUrl + 'categories');
     var categories = $firebaseArray(categoriesRef);
     var imageArrays = {};
+    var categoriesLoaded = false;
     var imageArraysLoaded = false;
     var imageCategoryXref = {};
 
@@ -21,12 +22,15 @@
       getCategories : getCategories,
       getImage : getImage,
       getImages : getImages,
+      getTopImages : getTopImages,
       toggleVote : toggleVote
     };
 
     function setImageArrays() {
       getCategories()
         .then(function(categories) {
+          var tempScope = $rootScope.$new(true);
+          tempScope.loadedCounter = 0;
           _.each(categories, function(category) {
             var imageRef = new Firebase(firebaseUrl + 'categories/' + category.$id + '/images');
             var imageArray = $firebaseArray(imageRef);
@@ -36,9 +40,19 @@
                 _.each(images, function(image) {
                   imageCategoryXref[image.$id] = category.$id;
                 });
+                tempScope.loadedCounter++;
               });
           });
-          imageArraysLoaded = true;
+          categoriesLoaded = true;
+
+          var loadedCounterWatch = tempScope.$watch('loadedCounter',
+            function(newVal) {
+              if(newVal === categories.length) {
+                imageArraysLoaded = true;
+                $rootScope.$broadcast('imageArraysLoaded');
+                loadedCounterWatch();
+              }
+            });
         });
     }
 
@@ -85,11 +99,23 @@
     }
 
     function getImages(categoryKey) {
-      if(imageArraysLoaded) {
+      if(categoriesLoaded) {
         return imageArrays[categoryKey].$loaded();
       } else {
         return $q.reject('image arrays not loaded');
       }
+    }
+
+    function getTopImages() {
+      if(categoriesLoaded) {
+        var topImages = _.values(_.mapObject(imageArrays, function(images) {
+          return _.max(images, function(image) {
+            return image.votes ? image.votes.length : 0;
+          })
+        }));
+        return topImages;
+      }
+      return null;
     }
 
     function saveImage(image) {
