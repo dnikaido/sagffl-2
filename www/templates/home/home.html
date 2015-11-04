@@ -6,7 +6,7 @@
                    auto-play="true"
                    slide-interval="5000"
                    class="home-slide-box">
-      <ion-slide ng-repeat="image in vm.imageSlides">
+      <ion-slide ng-repeat="image in vm.imageSlides" dynamic-slides="vm.imageSlides">
         <img ng-src="{{ image }}" />
       </ion-slide>
     </ion-slide-box>

@@ -3,7 +3,8 @@
 
   angular.module('sagffl')
     .config(configRoute)
-    .controller('HomeController', HomeController);
+    .controller('HomeController', HomeController)
+    .directive('dynamicSlides', dynamicSlides);
 
   function HomeController($log, $leagueapps, Images, $scope, $ionicSlideBoxDelegate) {
     var vm = this;
@@ -30,7 +31,6 @@
       $scope.$on('imageArraysLoaded', function() {
         var topImages = Images.getTopImages();
         vm.imageSlides = _.pluck(topImages, 'url');
-        $ionicSlideBoxDelegate.$getByHandle('home').update();
       });
 
     }
@@ -56,6 +56,20 @@
           }
         }
       });
+  }
 
+  function dynamicSlides() {
+    return {
+      require: ['^ionSlideBox'],
+      link: function(scope, elem, attrs, slider) {
+        scope.$watch(function() {
+          return scope.$eval(attrs.dynamicSlides).length;
+        }, function() {
+          var thisSlider = slider[0].__slider;
+          thisSlider.update();
+          thisSlider.loop(5000);
+        });
+      }
+    };
   }
 })();
