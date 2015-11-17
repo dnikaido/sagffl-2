@@ -1,7 +1,11 @@
 <ion-list class="list card">
-  <ion-item ng-repeat="game in vm.schedule.games | filter: vm.typeUpcoming"
+  <ion-item ng-repeat="game in vm.upcomingGames"
             class="item-text-wrap">
     <h3>{{ game.team1 }} vs. {{ game.team2 }}</h3>
     <p>{{ game.startTime | date : vm.dateFormat : vm.timeZone }}</p>
   </ion-item>
+  <p ng-if="!vm.upcomingGames.length"
+     class="no-games">
+    There are no games currently scheduled.
+  </p>
 </ion-list>

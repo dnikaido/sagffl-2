@@ -1,13 +1,26 @@
 <ion-view title="Programs">
   <ion-content padding="true"
                class="has-tabs">
-    <ion-list>
-      <ion-item ui-sref="nav.schedule.upcoming({id : vm.programId })">
+    <div class="list">
+      <a class="item"
+         ui-sref="nav.schedule.upcoming({id : vm.program.programId })">
         Schedule
-      </ion-item>
-      <ion-item ui-sref="nav.standings({id : vm.programId })">
-        Standings
-      </ion-item>
-    </ion-list>
+      </a>
+      <a class="item"
+         href="#"
+         ng-click="vm.openInBrowser(vm.program.standingsUrlHtml)">
+        View Standings
+      </a>
+      <a class="item"
+         href="#"
+         ng-click="vm.openInBrowser(vm.program.locationUrlHtml)">
+        View Location
+      </a>
+      <a class="item"
+         href="#"
+         ng-click="vm.openInBrowser(vm.program.programUrlHtml)">
+        View Home
+      </a>
+    </div>
   </ion-content>
 </ion-view>

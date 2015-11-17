@@ -9,3 +9,13 @@ span.winner {
   color: #ffc900;
   font-weight: bold;
 }
+
+p.not-played {
+  color: darkred;
+  font-weight: bold;
+}
+
+p.no-games {
+  font-size: 20px;
+  text-align: center;
+}

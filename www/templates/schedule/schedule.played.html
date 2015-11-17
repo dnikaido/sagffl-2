@@ -1,5 +1,5 @@
 <ion-list class="list card">
-  <ion-item ng-repeat="game in vm.schedule.games | filter: { type : vm.typePlayed } | orderBy: '-startTime'"
+  <ion-item ng-repeat="game in vm.playedGames | orderBy: '-startTime'"
             class="item-text-wrap">
     <h3>
       <span ng-class="{ winner : game.team1Result==='WIN' }">
@@ -13,8 +13,18 @@
       </span>
     </h3>
     <p>
-      Score {{ game.team1Score }} - {{ game.team2Score }} &nbsp; | &nbsp;
-      Played on {{ game.startTime | date : vm.dateFormat : vm.timeZone }}
+      <span  ng-if="game.team1Score && game.team2Score">
+        Score {{ game.team1Score }} - {{ game.team2Score }} &nbsp; | &nbsp; Played on
+      </span>
+      {{ game.startTime | date : vm.dateFormat : vm.timeZone }}
+    </p>
+    <p ng-if="!game.team1Score && !game.team2Score"
+       class="not-played">
+      {{ game.state }}
     </p>
   </ion-item>
+  <p ng-if="!vm.playedGames.length"
+     class="no-games">
+    No games have been played yet.
+  </p>
 </ion-list>

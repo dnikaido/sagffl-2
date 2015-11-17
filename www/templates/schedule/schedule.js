@@ -3,32 +3,43 @@
 
   angular.module('sagffl')
     .config(configRoute)
+    .filter('beforeNow', beforeNow)
     .controller('ScheduleController', ScheduleController);
 
-  function ScheduleController($log, $state, $stateParams, $leagueapps) {
+  function ScheduleController($log, $state, $stateParams, $leagueapps, $filter) {
     var vm = this;
     var programId = $stateParams.id;
     var errorMessage = 'Unfortunately the schedule is not available at this time.';
 
     vm.$state = $state;
-    vm.schedule = [];
+    vm.upcomingGames = [];
+    vm.playedGames = [];
     vm.dateFormat = 'MMM d, y h:mm a';
     vm.timeZone = '-0400';
-    vm.typeUpcoming = 'SCHEDULED';
-    vm.typePlayed = 'PLAYED_REGULAR_TIME';
 
     activate();
 
     function activate() {
       vm.error = null;
       $leagueapps.getSchedule(programId)
-        .then(function(response) {
-          vm.schedule = response;
+        .then(function(schedule) {
+          var beforeNow = $filter('beforeNow');
+          vm.playedGames = beforeNow(schedule.games, true);
+          vm.upcomingGames = beforeNow(schedule.games, false);
         }, function(error) {
           $log.debug(error);
           vm.error = errorMessage;
         });
     }
+  }
+
+  function beforeNow() {
+    return function(games, beforeNow) {
+      var filteredGames = _.filter(games, function(game) {
+        return moment().isAfter(game.startTime) ? beforeNow : !beforeNow;
+      });
+      return filteredGames;
+    };
   }
   function configRoute($stateProvider) {
     $stateProvider

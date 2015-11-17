@@ -25,7 +25,19 @@
     function getPrograms() {
       var requestUrl = url + 'programs/current' + apiKey + callback,
         storageKey = 'programs';
-      return makeRequest(requestUrl, storageKey);
+      return makeRequest(requestUrl, storageKey)
+        .then(function (programs) {
+          return fixLocationUrl(programs);
+        }, function(error) {
+          return error;
+        });
+
+      function fixLocationUrl(programs) {
+        return _.map(programs, function(program) {
+          program.locationUrlHtml = program.locationUrlHtml.replace('locaion', 'location');
+          return program;
+        });
+      }
     }
 
     function getSchedule(programId) {
@@ -35,12 +47,13 @@
     }
 
     function makeRequest(requestUrl, storageKey) {
+      var deferred;
       var data = $localStorage.hasOwnProperty(storageKey) === true
         ? $localStorage[storageKey]
         : null;
       if(data) {
+        deferred = $q.defer();
         $log.debug('storage:' + requestUrl);
-        var deferred = $q.defer();
         deferred.resolve(data);
         return deferred.promise;
       } else {

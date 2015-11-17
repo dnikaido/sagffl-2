@@ -1,5 +1,7 @@
 <ion-view view-title="Home">
   <ion-content padding>
+
+    <!--Top Images slide box-->
     <ion-slide-box delegate-handle="home"
                    does-continue="true"
                    show-pager="false"
@@ -10,7 +12,10 @@
         <img ng-src="{{ image }}" />
       </ion-slide>
     </ion-slide-box>
-    <div class="card"
+
+    <!--Latest announcement within the last month-->
+    <div ng-if="vm.firstAnnouncement"
+         class="card"
          ui-sref="nav.announcements">
       <div class="item item-divider">
         Latest Announcement
@@ -18,6 +23,21 @@
       <div class="item item-avatar item-text-wrap">
         <img ng-src="{{ vm.firstAnnouncement.userIconUrl }}">
         <p ng-bind-html="vm.firstAnnouncement.message"></p>
+      </div>
+    </div>
+
+    <!--Upcoming programs-->
+    <div ng-if="vm.upcomingPrograms"
+         class="card">
+      <div class="item item-divider">
+        New leagues are open!
+      </div>
+      <div ng-repeat="program in vm.upcomingPrograms"
+           class="item item-avatar item-text-wrap"
+           ng-click="vm.openInBrowser(program.programUrlHtml)">
+        <img ng-src="../img/{{ program.sport }}.jpg">
+        <p>{{ program.name }}</p>
+        <p>Register now!</p>
       </div>
     </div>
   </ion-content>
