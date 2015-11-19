@@ -20,6 +20,7 @@
     vm.comment = comment;
     vm.nextCategory = nextCategory;
     vm.previousCategory = previousCategory;
+    vm.scrollTop = scrollTop;
     vm.selectCategory = selectCategory;
     vm.toggleVote = toggleVote;
 
@@ -63,6 +64,9 @@
       selectCategory(newIndex);
     }
 
+    function scrollTop() {
+      $ionicScrollDelegate.scrollTop(true);
+    }
     function selectCategory(index) {
       vm.activeCategoryIndex = index;
       vm.activeCategory = vm.categories[index];

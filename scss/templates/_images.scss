@@ -60,24 +60,18 @@
   float: right;
 }
 
-.images-content {
-  bottom: 98px;
-}
+.images-header {
+  display: flex;
+  font-size: 20px;
+  line-height: 28px;
+  text-align: center;
 
-.images-tabs {
-  bottom: 49px;
-
-}
-
-.images-tabs-left {
-  border-right: 1px solid #7A7A7A;
-  text-align: left;
-}
-
-.images-tabs-right {
-  text-align: right;
-}
-
-.mfb-component--br {
-  margin-bottom: 104px;
+  a {
+    display: inline-block;
+    font-weight: 600;
+    width: 20%;
+  }
+  .category-middle {
+    width: 60%;
+  }
 }

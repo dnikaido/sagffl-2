@@ -1,6 +1,4 @@
 .home-slide-box {
-  height: 300px;
-
   img {
     position: absolute;
     top: -9999px;
@@ -8,7 +6,7 @@
     left: -9999px;
     right: -9999px;
     margin: auto;
-    min-width: 100%;
+    min-height: 100%;
   }
 
   .slider-slides {
