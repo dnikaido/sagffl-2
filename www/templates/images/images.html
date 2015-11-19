@@ -1,15 +1,21 @@
 <ion-view view-title="Images">
+  <ion-content padding="true"
+               class="images-content">
+    <image-slide category="vm.activeCategory" reload-images="vm.reloadImages"></image-slide>
+  </ion-content>
   <mfb-menu main-action="vm.addImage()"
             position="br"
             resting-icon="ion-plus"
             active-icon="ion-plus">
   </mfb-menu>
-    <ion-slide-box on-slide-changed="vm.selectCategory($index)"
-                   active-slide="vm.activeCategory"
-                   show-pager="false"
-                   class="images-slide-box">
-      <ion-slide ng-repeat="category in vm.categories">
-        <image-category category="category" reload-images="vm.reloadImages"></image-category>
-      </ion-slide>
-    </ion-slide-box>
+  <div class="tabs tabs-icon-only images-tabs">
+    <a ng-click="vm.previousCategory()"
+       class="tab-item images-tabs-left">
+      <i class="icon ion-chevron-left"></i>
+    </a>
+    <a ng-click="vm.nextCategory()"
+       class="tab-item images-tabs-right">
+      <i class="icon ion-chevron-right"></i>
+    </a>
+  </div>
 </ion-view>

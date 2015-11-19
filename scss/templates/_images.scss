@@ -60,10 +60,24 @@
   float: right;
 }
 
-.images-slide-box.slider{
-  position: absolute !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  left: 0 !important ;
-  right: 0 !important;
+.images-content {
+  bottom: 98px;
+}
+
+.images-tabs {
+  bottom: 49px;
+
+}
+
+.images-tabs-left {
+  border-right: 1px solid #7A7A7A;
+  text-align: left;
+}
+
+.images-tabs-right {
+  text-align: right;
+}
+
+.mfb-component--br {
+  margin-bottom: 104px;
 }

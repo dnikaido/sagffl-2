@@ -1,0 +1,40 @@
+<h3>{{ category.name }}</h3>
+<div ng-repeat="image in orderedImages track by image.url"
+     class="list card">
+  <div class="item item-divider">
+    {{ image.title }}
+  </div>
+  <div class="item item-body">
+    <img class="full-image"
+         ng-src="{{ image.url }}"
+         ng-click="vm.gallery.showImage(image)">
+    <p class="subdued">Submitted by {{ image.uploader }}</p>
+    <p>
+      <span class="subdued">{{ count(image.votes) }} Votes</span>
+      <span class="subdued">{{ count(image.comments) }} Comments</span>
+    </p>
+  </div>
+  <div class="item tabs tabs-secondary tabs-icon-left">
+    <button class="tab-item button"
+            ng-class="vm.currentVote(image) ? 'button-energized' : 'button-clear'"
+            ng-click="vm.toggleVote(image)">
+      <i class="icon ion-thumbsup"></i>
+      Vote
+    </button>
+    <button class="tab-item button button-clear"
+            ui-sref="nav.images-comment({key : image.$id })">
+      <i class="icon ion-chatbox"></i>
+      Comment
+    </button>
+    <button class="tab-item button button-clear"
+            ng-click="vm.flag(image)">
+      <i class="icon ion-alert-circled"></i>
+      Report
+    </button>
+  </div>
+</div>
+<div ng-if="!orderedImages">
+  <h3>Be the first to add an image!</h3>
+</div>
+
+

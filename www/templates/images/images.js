@@ -5,19 +5,21 @@
     .config(configRoute)
     .controller('ImagesController', ImagesController);
 
-  function ImagesController($log, Images, $state, $facebook, Gallery, $ionicSlideBoxDelegate, $scope) {
+  function ImagesController($log, Images, $state, $facebook, Gallery, $scope, $ionicScrollDelegate) {
     var vm = this;
 
-    vm.activeCategory = 0;
+    vm.activeCategory = null;
+    vm.activeCategoryIndex = 0;
     vm.categories = [];
-    vm.selectedCategory = null;
-    vm.reloadImages = true;
+    vm.gallery = Gallery;
+    vm.reloadImages = false;
     vm.username = null;
 
     vm.addImage = addImage;
     vm.currentVote = currentVote;
     vm.comment = comment;
-    vm.gallery = Gallery;
+    vm.nextCategory = nextCategory;
+    vm.previousCategory = previousCategory;
     vm.selectCategory = selectCategory;
     vm.toggleVote = toggleVote;
 
@@ -33,17 +35,39 @@
       Images.getCategories()
         .then(function(categories) {
           vm.categories = categories;
-          if(!vm.activeCategory) {
-            selectCategory(0);
-          } else {
-            selectCategory(vm.activeCategory);
-          }
           vm.reloadImages = true;
+          selectCategory(vm.activeCategoryIndex);
         });
     }
 
     function addImage() {
-      $state.go('nav.images-add', { categoryIndex : vm.activeCategory });
+      $state.go('nav.images-add', { categoryIndex : vm.activeCategoryIndex });
+    }
+
+    function nextCategory() {
+      addCategoryIndex(1);
+    }
+
+    function previousCategory() {
+      addCategoryIndex(-1);
+    }
+
+    function addCategoryIndex(addToIndex) {
+      var categoriesLength = vm.categories.length;
+      var newIndex =  vm.activeCategoryIndex + addToIndex;
+      if(newIndex > categoriesLength - 1) {
+        newIndex = 0;
+      } else if (newIndex < 0) {
+        newIndex = categoriesLength - 1;
+      }
+      selectCategory(newIndex);
+    }
+
+    function selectCategory(index) {
+      vm.activeCategoryIndex = index;
+      vm.activeCategory = vm.categories[index];
+      vm.reloadImages = true;
+      $ionicScrollDelegate.scrollTop(false);
     }
 
     function comment(image) {
@@ -54,11 +78,6 @@
       if(vm.username) {
         return _.contains(image.votes, vm.username);
       }
-    }
-
-    function selectCategory(index) {
-      vm.activeCategory = index;
-      $ionicSlideBoxDelegate.update();
     }
 
     function toggleVote(image) {
@@ -72,8 +91,7 @@
           .then(function (response) {
             vm.username = response.data.name;
             Images.toggleVote(image, vm.username);
-          })
-          .catch(function (error) {
+          }, function (error) {
             $log.debug(error);
           });
       }
