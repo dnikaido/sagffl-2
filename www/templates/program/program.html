@@ -1,5 +1,8 @@
 <ion-view title="Programs">
-  <ion-content class="has-tabs">
+  <div class="bar bar-subheader bar-energized">
+    <h3 class="title">{{ vm.program.name }}</h3>
+  </div>
+  <ion-content class="has-tabs has-subheader">
     <div class="list">
       <a class="item"
          ui-sref="nav.schedule.upcoming({id : vm.program.programId })">
