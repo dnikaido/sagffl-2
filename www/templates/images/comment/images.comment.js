@@ -16,7 +16,7 @@
     };
   }
 
-  function CommentsController($log, Gallery, $stateParams, Images, $facebook, $state, $ionicPopup) {
+  function CommentsController($log, Gallery, $stateParams, Images, $facebook, $state, $ionicPopup, Util) {
     var comment = this;
     var commentError = 'Oops! Something happened trying to submit your comment. Please try again.';
 
@@ -26,7 +26,7 @@
     comment.gallery = Gallery;
     comment.add = add;
     comment.login = login;
-    comment.getFromNow = getFromNow;
+    comment.getFromNow = Util.getFromNow;
 
     activate();
 
@@ -50,11 +50,6 @@
             errorPopup(commentError);
           });
       }
-    }
-
-    function getFromNow(timestamp) {
-      var commentTime = moment(timestamp);
-      return commentTime.fromNow();
     }
 
     function login() {

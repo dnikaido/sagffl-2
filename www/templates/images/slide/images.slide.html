@@ -12,6 +12,7 @@
     <p>
       <span class="subdued">{{ count(image.votes) }} Votes</span>
       <span class="subdued">{{ count(image.comments) }} Comments</span>
+      <span class="image-timestamp">{{ vm.getFromNow(image.timestamp) }}</span>
     </p>
   </div>
   <div class="item tabs tabs-secondary tabs-icon-left">

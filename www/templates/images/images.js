@@ -5,7 +5,7 @@
     .config(configRoute)
     .controller('ImagesController', ImagesController);
 
-  function ImagesController($log, Images, $state, $facebook, Gallery, $scope, $ionicScrollDelegate) {
+  function ImagesController($log, Images, $state, $facebook, Gallery, $scope, $ionicScrollDelegate, Util) {
     var vm = this;
 
     vm.activeCategory = null;
@@ -18,6 +18,7 @@
     vm.addImage = addImage;
     vm.currentVote = currentVote;
     vm.comment = comment;
+    vm.getFromNow = Util.getFromNow;
     vm.nextCategory = nextCategory;
     vm.previousCategory = previousCategory;
     vm.scrollTop = scrollTop;
