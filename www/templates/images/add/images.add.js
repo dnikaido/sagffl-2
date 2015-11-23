@@ -5,30 +5,30 @@
     .controller('ImagesAddController', ImagesAddController);
 
   function ImagesAddController($log, $facebook, $document, $rootScope, $ionicPopup, Images, $state, $ionicScrollDelegate, $stateParams) {
-    var vm = this;
+    var add = this;
     var duplicateError = 'Oops! That photo has already been submitted. Please choose another.';
     var submitError = 'Oops! There was an upload error. Sad face.';
 
-    vm.albums = {};
-    vm.categoryIndex = $stateParams.categoryIndex;
-    vm.photos = {};
-    vm.username = '';
-    vm.selectedPhoto = '';
+    add.albums = {};
+    add.categoryIndex = $stateParams.categoryIndex;
+    add.photos = {};
+    add.username = '';
+    add.selectedPhoto = '';
 
-    vm.clickPhoto = clickPhoto;
-    vm.selectAlbum = selectAlbum;
-    vm.selectPhoto = selectPhoto;
+    add.clickPhoto = clickPhoto;
+    add.selectAlbum = selectAlbum;
+    add.selectPhoto = selectPhoto;
 
     activate();
 
     function activate() {
-      $facebook.getAlbums('nav.images-add', { categoryIndex : vm.categoryIndex })
+      $facebook.getAlbums('nav.images.add', { categoryIndex : add.categoryIndex })
         .then(function(response) {
-          vm.albums = response.data.albums;
+          add.albums = response.data.albums;
           setScrollHeight();
-          $facebook.getCurrentUser('nav.images-add')
+          $facebook.getCurrentUser('nav.images.add')
             .then(function(response) {
-              vm.username = response.data.name;
+              add.username = response.data.name;
             });
         })
         .catch(function(error) {
@@ -37,18 +37,18 @@
     }
 
     function clickPhoto(photo, index) {
-      if(vm.selectedPhoto===index) {
+      if(add.selectedPhoto===index) {
         selectPhoto(photo);
       } else {
-        vm.selectedPhoto = index;
+        add.selectedPhoto = index;
       }
     }
 
     function selectAlbum(albumId) {
-      $facebook.getAlbumPhotos(albumId, 'nav.images-add')
+      $facebook.getAlbumPhotos(albumId, 'nav.images.add')
         .then(function(response) {
-          vm.photos = response.data.photos;
-          vm.selectedPhoto = '';
+          add.photos = response.data.photos;
+          add.selectedPhoto = '';
           $ionicScrollDelegate.$getByHandle('photos').scrollTop(false);
         })
         .catch(function(error) {
@@ -113,16 +113,16 @@
             url : smallImage.source,
             zoomUrl : zoomImage.source,
             title : title,
-            uploader : vm.username
+            uploader : add.username
           };
           if(validatePhoto(uploadPhoto)) {
             if(!duplicatePhoto(uploadPhoto)) {
-              Images.addImage(uploadPhoto, vm.categoryIndex)
+              Images.addImage(uploadPhoto, add.categoryIndex)
                 .catch(function(error) {
                   $log.debug(error);
                   errorPopup(submitError);
                 });
-              $state.go('nav.images');
+              $state.go('nav.images.home');
             } else {
               errorPopup(duplicateError);
             }
@@ -151,7 +151,7 @@
     }
 
     function duplicatePhoto(photo) {
-      var category = Images.getCategory(vm.categoryIndex);
+      var category = Images.getCategory(add.categoryIndex);
       if(category) {
         return _.some(category.images, function(image) {
           return photo.url===image.url;

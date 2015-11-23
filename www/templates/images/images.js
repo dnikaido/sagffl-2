@@ -12,6 +12,9 @@
     vm.activeCategoryIndex = 0;
     vm.categories = [];
     vm.gallery = Gallery;
+    vm.mfbState = null;
+    vm.orderDesc = null;
+    vm.orderSort = null;
     vm.reloadImages = false;
     vm.username = null;
 
@@ -29,6 +32,10 @@
       activate();
     });
 
+    $scope.$on('$ionicView.leave', function() {
+      vm.mfbState = 'closed';
+    });
+
     function activate() {
       $facebook.getCurrentUser()
         .then(function(response) {
@@ -43,7 +50,7 @@
     }
 
     function addImage() {
-      $state.go('nav.images-add', { categoryIndex : vm.activeCategoryIndex });
+      $state.go('nav.images.add', { categoryIndex : vm.activeCategoryIndex });
     }
 
     function nextCategory() {
@@ -76,7 +83,7 @@
     }
 
     function comment(image) {
-      $state.go('nav.images-comment', { key : image.$id });
+      $state.go('nav.images.comment', { key : image.$id });
     }
 
     function currentVote(image) {
@@ -92,7 +99,7 @@
             $log.debug(error);
           });
       } else {
-        $facebook.getCurrentUser('nav.images', true)
+        $facebook.getCurrentUser('nav.images.home', true)
           .then(function (response) {
             vm.username = response.data.name;
             Images.toggleVote(image, vm.username);
@@ -107,33 +114,50 @@
     $stateProvider
       .state('nav.images', {
         url: '/images',
+        abstract: true,
         views: {
           'main': {
-            templateUrl: 'templates/images/images.html',
+            templateUrl: 'templates/images/images.view.html',
             controller: 'ImagesController as vm'
           }
         }
       })
-      .state('nav.images-add', {
-        url: '/images/add',
+      .state('nav.images.home', {
+        views: {
+          'images': {
+            templateUrl: 'templates/images/images.html'
+          }
+        }
+      })
+      .state('nav.images.add', {
+        url: '/add',
         cache: false,
         params: {
           categoryIndex : ''
         },
         views: {
-          'main': {
+          'images': {
             templateUrl: 'templates/images/add/images.add.html',
-            controller: 'ImagesAddController as vm'
+            controller: 'ImagesAddController as add'
           }
         }
       })
-      .state('nav.images-comment', {
-        url: '/images/comment/:key',
+      .state('nav.images.comment', {
+        url: '/comment/:key',
         cache: false,
         views: {
-          'main': {
+          'images': {
             templateUrl: 'templates/images/comment/images.comment.html',
             controller: 'CommentsController as comment'
+          }
+        }
+      })
+      .state('nav.images.sort', {
+        url: '/sort',
+        views: {
+          'images': {
+            templateUrl: 'templates/images/sort/images.sort.html',
+            controller: 'ImagesSortController as sort'
           }
         }
       })

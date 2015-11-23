@@ -17,10 +17,17 @@
                class="has-header has-footer">
     <image-slide category="vm.activeCategory" reload-images="vm.reloadImages"></image-slide>
   </ion-content>
-  <mfb-menu main-action="vm.addImage()"
+  <mfb-menu toggling-method="click"
+            menu-state="vm.mfbState"
+            effect="zoomin"
             position="br"
             resting-icon="ion-plus"
-            active-icon="ion-plus">
+            active-icon="ion-close">
+    <mfb-button ng-click="vm.addImage()"
+                icon="ion-plus"
+                label="Upload"></mfb-button>
+    <mfb-button ui-sref="nav.images.sort"
+                icon="mdi mdi-sort-variant"
+                label="Sort by"></mfb-button>
   </mfb-menu>
-
 </ion-view>

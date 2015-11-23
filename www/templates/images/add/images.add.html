@@ -6,9 +6,9 @@
       <div class="col col-33">
         <ion-scroll class="album-cover-scroll">
           <div class="list">
-            <a ng-repeat="album in vm.albums.data | orderBy: '-created_time'"
+            <a ng-repeat="album in add.albums.data | orderBy: '-created_time'"
                class="item album-list"
-               ng-click="vm.selectAlbum(album.id)">
+               ng-click="add.selectAlbum(album.id)">
               <div class="album-cover">
                 <img ng-src="{{ album.picture.data.url }}">
               </div>
@@ -20,11 +20,11 @@
       <div class="col col-67">
         <ion-scroll delegate-handle="photos"
                     class="album-photo-scroll">
-          <div ng-repeat="photo in vm.photos.data"
+          <div ng-repeat="photo in add.photos.data"
                class="album-photo"
-               ng-class="{ selected : vm.selectedPhoto===$index }"
-               ng-click="vm.clickPhoto(photo, $index)"
-               on-hold="vm.selectPhoto(photo)">
+               ng-class="{ selected : add.selectedPhoto===$index }"
+               ng-click="add.clickPhoto(photo, $index)"
+               on-hold="add.selectPhoto(photo)">
             <img ng-src="{{ photo.picture }}">
           </div>
         </ion-scroll>

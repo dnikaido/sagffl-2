@@ -1,0 +1,18 @@
+<ion-view title="Choose Sort">
+  <ion-content class="has-tabs">
+    <div class="list sort-list">
+      <a class="item item-icon-right"
+         ng-click="sort.toggleOrderDesc()">
+        <i class="mdi {{ sort.orderDesc ? 'mdi-sort-descending' : 'mdi-sort-ascending' }}"></i>
+        {{ sort.orderText }}
+      </a>
+      <a ng-repeat="orderType in sort.orderTypes"
+         class="item item-icon-right"
+         ng-click="sort.selectOrder(orderType)">
+        <i ng-show="orderType === sort.selectedOrder"
+           class="icon ion-checkmark"></i>
+        {{ orderType.name }}
+      </a>
+    </div>
+  </ion-content>
+</ion-view>

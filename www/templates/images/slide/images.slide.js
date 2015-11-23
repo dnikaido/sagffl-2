@@ -29,7 +29,7 @@
           if($scope.category) {
             Images.getImages($scope.category.$id)
               .then(function(images) {
-                $scope.orderedImages = orderImages(images);
+                $scope.orderedImages = orderImages(images, $scope.vm.orderSort, $scope.vm.orderDesc);
                 $scope.reloadImages = false;
               });
           }
@@ -45,7 +45,7 @@
 
         function orderImages(images, newOrder, newReverse) {
           var order = newOrder ? newOrder : countVotes;
-          var reverse = newReverse ? newReverse : true;
+          var reverse = newReverse != null ? newReverse : true;
           return $filter('orderBy')(images, order, reverse);
         }
       }

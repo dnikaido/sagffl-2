@@ -12,7 +12,7 @@
     function loadStates() {
       service.states.push(new State('nav.home', 'Home', 'Home', true));
       service.states.push(new State('nav.announcements', 'Announcements', 'Home'));
-      service.states.push(new State('nav.images', 'Images', 'Images', true));
+      service.states.push(new State('nav.images.home', 'Images', 'Images', true));
       service.states.push(new State('nav.programs', 'Programs', 'Programs', true));
       service.states.push(new State('nav.login', 'Login', 'Home'));
     }

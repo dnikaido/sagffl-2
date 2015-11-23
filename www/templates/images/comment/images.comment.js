@@ -2,19 +2,7 @@
   'use strict';
 
   angular.module('sagffl')
-    .directive('imageComments', imageComments)
     .controller('CommentsController', CommentsController);
-
-  function imageComments() {
-    return {
-      templateUrl : 'templates/images/comment/images.comment.html',
-      scope : {
-        image : '=',
-        username : '='
-      },
-      controller : 'CommentsController as comment'
-    };
-  }
 
   function CommentsController($log, Gallery, $stateParams, Images, $facebook, $state, $ionicPopup, Util) {
     var comment = this;
@@ -54,7 +42,7 @@
 
     function login() {
       var loginParams = {
-        toState: 'nav.images-comment',
+        toState: 'nav.images.comment',
         options: {key: comment.image.$id}
       };
       $state.go('nav.login', loginParams)

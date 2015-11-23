@@ -5,10 +5,13 @@
 //components
 @import 'components/ionic.tabs';
 @import 'components/ionic.list';
+@import 'components/ionic.item';
+@import 'components/mdi.icons';
+@import 'components/mfb';
 
 //templates
-@import 'templates/schedule';
 @import 'templates/album';
-@import 'templates/images';
 @import 'templates/home';
+@import 'templates/images';
+@import 'templates/schedule';
 
