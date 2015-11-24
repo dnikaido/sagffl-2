@@ -1,5 +1,16 @@
 <ion-view title="Login">
-  <ion-content>
-
+  <ion-content class="login-content">
+    <div class="login-text">
+      <h2>Join the conversation!</h2>
+      <h4>Log in with Facebook to participate.</h4>
+      <p ng-if="vm.needPhotos">
+        If you would like to upload we'll need extra permissions to access your Facebook photos.
+      </p>
+    </div>
+    <button ng-click="vm.login()"
+            class="button button-full login-facebook">
+      Login with Facebook
+      <i class="mdi mdi-facebook-box"></i>
+    </button>
   </ion-content>
 </ion-view>

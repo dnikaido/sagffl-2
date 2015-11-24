@@ -1,0 +1,18 @@
+.login-content {
+  text-align: center;
+}
+.login-facebook {
+  color: white;
+  background-color: $color-facebook;
+  i {
+    font-size: 24px;
+    padding-left: 15px;
+    vertical-align: text-bottom;
+  }
+}
+.login-facebook:hover {
+  color: white;
+}
+.login-text {
+  margin: 40px 0;
+}

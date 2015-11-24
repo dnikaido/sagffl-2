@@ -17,51 +17,86 @@
   function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q) {
     var CLIENT_ID = '400628200140143';
     var url = 'https://graph.facebook.com/v2.4/';
+    var permission = {
+      PUBLIC : 'public_profile',
+      PHOTOS : 'user_photos'
+    };
 
     return {
+      permission : permission,
       login : login,
+      loginRerequest : loginRerequest,
       getAlbums : getAlbums,
       getAlbumPhotos : getAlbumPhotos,
       getPhoto : getPhoto,
       getCurrentUser : getCurrentUser
     };
 
-    function login(toState, params, permissions) {
-      var defaultPermissions = 'public_profile';
+
+    function loginRerequest(toState, params, permissions) {
+      return login(toState, params, permissions, true);
+    }
+
+    function login(toState, params, permissions, rerequest) {
+      var defaultPermissions = permission.PUBLIC;
       permissions = permissions
         ? defaultPermissions + ',' + permissions
         : defaultPermissions;
 
-      $cordovaOauth.facebook(CLIENT_ID, permissions.split(','), { return_scopes: true })
+      var requestParams = {
+        return_scopes: true
+      };
+      if(rerequest) {
+        requestParams.auth_type = 'rerequest';
+      }
+
+      return $cordovaOauth.facebook(CLIENT_ID, permissions.split(','), requestParams)
         .then(function(response) {
-          $localStorage.accessToken = response.access_token;
-          getCurrentUser();
-          getPermissions()
-            .then(permissionCallback)
-            .catch(function(error) {
-              $log.debug(error);
-            });
-        })
-        .catch(function(error) {
-          /* Only for running in a browser! */
-          if(error==='Cannot authenticate via a web browser') {
-            ezfb.login(null, { scope: permissions })
-              .then(function(response) {
-                $localStorage.accessToken = response.authResponse.accessToken;
-                getCurrentUser();
-                getPermissions()
-                  .then(permissionCallback)
-                  .catch(function(error) {
-                    $log.debug(error);
-                  });
-              });
+          return loginSuccess(response);
+        }, function(error) {
+          if(error==='Facebook returned error_code=100: Invalid permissions') {
+            return $q.reject('Invalid permissions');
+          } else if(error==='Cannot authenticate via a web browser') {
+            /* Only for running in a browser! */
+            return browserLogin();
           } else {
-            $log.debug(error);
+            return $q.reject(error);
           }
         });
-      function permissionCallback(response) {
+
+      function verifyPermissions(response) {
         $localStorage.permissions = response.data.data;
-        $state.go(toState, params, { reload : true });
+        if(checkPermissions(permissions.split(','))) {
+          $state.go(toState, params, { reload : true });
+          return $q.resolve();
+        } else {
+          return $q.reject('Permission denied');
+        }
+      }
+
+      function loginSuccess(response) {
+        $localStorage.accessToken = response.access_token;
+        getCurrentUser();
+        return getPermissions()
+          .then(verifyPermissions)
+          .catch(function(error) {
+            return $q.reject(error);
+          });
+      }
+      function browserLogin() {
+        requestParams.scope = permissions;
+        return ezfb.login(null, requestParams)
+          .then(function(response) {
+            $localStorage.accessToken = response.authResponse.accessToken;
+            getCurrentUser();
+            return getPermissions()
+              .then(verifyPermissions)
+              .catch(function(error) {
+                return $q.reject(error);
+              });
+          }, function(error) {
+            return $q.reject(error);
+          });
       }
     }
 
@@ -105,7 +140,7 @@
       var albumUrl = url + 'me';
       var fields = 'albums{picture,name,created_time}';
 
-      if(checkLogin() && checkPermissions(['user_photos'])) {
+      if(checkLogin() && checkPermissions([permission.PHOTOS])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
             access_token : $localStorage.accessToken
@@ -115,7 +150,7 @@
         $state.go('nav.login', {
           toState : toState,
           options : options,
-          permissions : 'user_photos'
+          permissions : [permission.PHOTOS]
         });
         return $q.reject('not logged in');
       }
@@ -125,7 +160,7 @@
       var albumUrl = url + albumId;
       var fields = 'photos{picture}';
 
-      if(checkLogin() && checkPermissions(['user_photos'])) {
+      if(checkLogin() && checkPermissions([permission.PHOTOS])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
             access_token : $localStorage.accessToken
@@ -134,7 +169,7 @@
       } else {
         $state.go('nav.login', {
           toState : toState,
-          permissions : 'user_photos'
+          permissions : [permission.PHOTOS]
         });
         return $q.reject('not logged in');
       }
@@ -144,7 +179,7 @@
       var photoUrl = url + photoId;
       var fields = 'images';
 
-      if(checkLogin() && checkPermissions(['user_photos'])) {
+      if(checkLogin() && checkPermissions([permission.PHOTOS])) {
         return $http.get(photoUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
             access_token : $localStorage.accessToken
@@ -153,7 +188,7 @@
       } else {
         $state.go('nav.login', {
           toState : toState,
-          permissions : 'user_photos'
+          permissions : [permission.PHOTOS]
         });
         return $q.reject('not logged in');
       }
