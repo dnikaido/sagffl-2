@@ -5,11 +5,12 @@
     .config(configRoute)
     .controller('LoginController', LoginController);
 
-  function LoginController($log, $facebook, $state, $stateParams, $ionicPopup) {
+  function LoginController($log, $facebook, $state, $stateParams, $ionicPopup, $ionicSideMenuDelegate) {
     var vm = this;
     var toState = $stateParams.toState ? $stateParams.toState : 'nav.home';
     var options = $stateParams.options ? $stateParams.options : {};
     var permissions = $stateParams.permissions ? $stateParams.permissions : null;
+    var logoutState = $stateParams.logout;
 
     vm.needPhotos = null;
 
@@ -19,6 +20,9 @@
 
     function activate() {
       checkPermissions();
+      if(logoutState) {
+        logout();
+      }
     }
 
     function checkPermissions() {
@@ -54,6 +58,14 @@
         });
     }
 
+    function logout() {
+      $facebook.logout();
+      $ionicSideMenuDelegate.toggleLeft(false);
+      $ionicPopup.alert({
+        title: 'Thanks!',
+        template: 'You have logged out, but don\'t be a stranger!'
+      });
+    }
   }
   function configRoute($stateProvider) {
     $stateProvider
@@ -63,7 +75,24 @@
         params: {
           toState : null,
           options : null,
-          permissions : null
+          permissions : null,
+          logout: false
+        },
+        views: {
+          'main': {
+            templateUrl: 'templates/login/login.html',
+            controller: 'LoginController as vm'
+          }
+        }
+      })
+      .state('nav.logout', {
+        url: '/logout',
+        cache: false,
+        params: {
+          toState : null,
+          options : null,
+          permissions : null,
+          logout: true
         },
         views: {
           'main': {

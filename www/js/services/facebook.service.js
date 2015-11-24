@@ -14,7 +14,7 @@
       });
     });
 
-  function FacebookService($log, $http, $cordovaOauth, $localStorage, $state, ezfb, $q) {
+  function FacebookService($rootScope, $http, $cordovaOauth, $localStorage, $state, ezfb, $q) {
     var CLIENT_ID = '400628200140143';
     var url = 'https://graph.facebook.com/v2.4/';
     var permission = {
@@ -24,7 +24,9 @@
 
     return {
       permission : permission,
+      checkLogin : checkLogin,
       login : login,
+      logout : logout,
       loginRerequest : loginRerequest,
       getAlbums : getAlbums,
       getAlbumPhotos : getAlbumPhotos,
@@ -65,7 +67,7 @@
         });
 
       function verifyPermissions(response) {
-        $localStorage.permissions = response.data.data;
+        $localStorage.user.permissions = response.data.data;
         if(checkPermissions(permissions.split(','))) {
           $state.go(toState, params, { reload : true });
           return $q.resolve();
@@ -75,7 +77,7 @@
       }
 
       function loginSuccess(response) {
-        $localStorage.accessToken = response.access_token;
+        $localStorage.user.accessToken = response.access_token;
         getCurrentUser();
         return getPermissions()
           .then(verifyPermissions)
@@ -87,7 +89,7 @@
         requestParams.scope = permissions;
         return ezfb.login(null, requestParams)
           .then(function(response) {
-            $localStorage.accessToken = response.authResponse.accessToken;
+            $localStorage.user.accessToken = response.authResponse.accessToken;
             getCurrentUser();
             return getPermissions()
               .then(verifyPermissions)
@@ -100,22 +102,29 @@
       }
     }
 
+    function logout() {
+      $localStorage.user = {};
+      $rootScope.$broadcast('logout');
+    }
+
     function getCurrentUser(toState, forceLogin) {
       if(checkLogin()) {
-        if($localStorage.hasOwnProperty('username')===true) {
+        if($localStorage.hasOwnProperty('user')===true
+          && $localStorage.user.hasOwnProperty('username')===true) {
           var response = {
-            data : { name : $localStorage.username }
+            data : { name : $localStorage.user.username }
           };
           return $q.resolve(response);
         }
         var userUrl = url + 'me';
         return $http.get(userUrl, {
-          params: {
-            access_token : $localStorage.accessToken
-          }
-        })
+            params: {
+              access_token : $localStorage.user.accessToken
+            }
+          })
           .then(function(response) {
-            $localStorage.username = response.data.name;
+            $localStorage.user.username = response.data.name;
+            $rootScope.$broadcast('loggedIn');
             return response;
           });
       } else if(toState && forceLogin) {
@@ -131,7 +140,7 @@
 
       return $http.get(permissionsUrl, {
         params: {
-          access_token : $localStorage.accessToken
+          access_token : $localStorage.user.accessToken
         }
       });
     }
@@ -143,7 +152,7 @@
       if(checkLogin() && checkPermissions([permission.PHOTOS])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
-            access_token : $localStorage.accessToken
+            access_token : $localStorage.user.accessToken
           }
         });
       } else {
@@ -163,7 +172,7 @@
       if(checkLogin() && checkPermissions([permission.PHOTOS])) {
         return $http.get(albumUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
-            access_token : $localStorage.accessToken
+            access_token : $localStorage.user.accessToken
           }
         });
       } else {
@@ -182,7 +191,7 @@
       if(checkLogin() && checkPermissions([permission.PHOTOS])) {
         return $http.get(photoUrl + '?fields=' + encodeURIComponent(fields), {
           params: {
-            access_token : $localStorage.accessToken
+            access_token : $localStorage.user.accessToken
           }
         });
       } else {
@@ -195,13 +204,15 @@
     }
 
     function checkLogin() {
-      return $localStorage.hasOwnProperty('accessToken') === true;
+      return $localStorage.hasOwnProperty('user') === true
+        && $localStorage.user.hasOwnProperty('accessToken') === true;
     }
 
     function checkPermissions(permissions) {
-      if($localStorage.hasOwnProperty('permissions') === true) {
+      if($localStorage.hasOwnProperty('user') === true
+        && $localStorage.user.hasOwnProperty('permissions') === true) {
         var grantedPermissions =
-          $localStorage.permissions.filter(function(permission) {
+          $localStorage.user.permissions.filter(function(permission) {
             return permissions.indexOf(permission.permission) >= 0
               && permission.status === 'granted';
           });

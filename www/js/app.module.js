@@ -15,7 +15,10 @@
     .run(configStorage);
 
   function configStorage($localStorage) {
-    $localStorage.$reset();
+    var user = $localStorage.user || {};
+    $localStorage.$reset({
+      user : user
+    });
   }
 
   function watchRoutes($log, $rootScope) {

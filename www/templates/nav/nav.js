@@ -4,7 +4,7 @@
   angular.module('sagffl')
     .controller('NavController', NavController);
 
-  function NavController($state, Anchor, $ionicSideMenuDelegate, $ionicTabsDelegate, $ionicHistory, $timeout) {
+  function NavController($scope, $state, Anchor, $ionicSideMenuDelegate, $ionicTabsDelegate, $ionicHistory, $timeout) {
     var vm = this;
 
     vm.$state = $state;
@@ -15,6 +15,12 @@
     vm.goBack = goBack;
     vm.selectMenuItem = selectMenuItem;
     vm.selectTab = selectTab;
+
+    $scope.$watch(function() {
+      return Anchor.states;
+    }, function(newStates) {
+      vm.menuItems = newStates;
+    });
 
     activate();
 
