@@ -108,11 +108,21 @@
 
     function getTopImages() {
       if(categoriesLoaded) {
-        var topImages = _.values(_.mapObject(imageArrays, function(images) {
-          return _.max(images, function(image) {
-            return image.votes ? image.votes.length : 0;
-          })
-        }));
+        var topImages =
+          _.values(
+            _.compact(
+              _.mapObject(imageArrays, function(images) {
+                if (images.length) {
+                  return _.max(images,
+                    function(image) {
+                      return image.votes ? image.votes.length : 0;
+                    })
+                } else {
+                  return null;
+                }
+              })
+            )
+          );
         return topImages;
       }
       return null;

@@ -69,6 +69,9 @@
         $scope.$on('imageArraysLoaded', function() {
           var topImages = Images.getTopImages();
           vm.imageSlides = _.pluck(topImages, 'url');
+          if(!vm.imageSlides.length) {
+            vm.imageSlides.push('/img/diablos-head.jpg');
+          }
         });
       }
     }

@@ -35,7 +35,7 @@
       <div ng-repeat="program in vm.upcomingPrograms"
            class="item item-avatar item-text-wrap"
            ng-click="vm.openInBrowser(program.programUrlHtml)">
-        <img ng-src="../img/{{ program.sport }}.jpg">
+        <img ng-src="../img/{{ program.sport }}.jpg" alt-image>
         <p>{{ program.name }}</p>
         <p>Register now!</p>
       </div>
