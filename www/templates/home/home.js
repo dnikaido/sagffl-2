@@ -11,7 +11,8 @@
 
     vm.firstAnnouncement = null;
     vm.imageSlides = null;
-    vm.upcomingPrograms = null;
+    vm.upcomingLeagues = null;
+    vm.upcomingTournaments = null;
 
     vm.openInBrowser = openInBrowser;
 
@@ -54,7 +55,8 @@
       $leagueapps.getPrograms()
         .then(function(programs) {
           if(programs) {
-            vm.upcomingPrograms = _.where(programs, { state: 'UPCOMING' });
+            vm.upcomingLeagues = _.where(programs, { state: 'UPCOMING', type: 'LEAGUE' });
+            vm.upcomingTournaments = _.where(programs, { state: 'UPCOMING', type: 'TOURNAMENT' });
           }
         }, function(error) {
           $log.debug(error);

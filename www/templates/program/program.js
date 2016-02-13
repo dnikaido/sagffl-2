@@ -13,6 +13,7 @@
     vm.program = null;
 
     vm.openInBrowser = openInBrowser;
+    vm.registrationOpen = registrationOpen;
 
     activate();
 
@@ -30,6 +31,10 @@
 
     function openInBrowser(url) {
       $window.open(url, '_system');
+    }
+
+    function registrationOpen() {
+      return vm.program.state === 'UPCOMING';
     }
   }
 

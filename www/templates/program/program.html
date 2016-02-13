@@ -8,7 +8,8 @@
          ui-sref="nav.schedule.upcoming({id : vm.program.programId })">
         Schedule
       </a>
-      <a class="item"
+      <a ng-if="!vm.registrationOpen()"
+         class="item"
          href="#"
          ng-click="vm.openInBrowser(vm.program.standingsUrlHtml)">
         View Standings
@@ -21,7 +22,8 @@
       <a class="item"
          href="#"
          ng-click="vm.openInBrowser(vm.program.programUrlHtml)">
-        View Home
+        <span ng-if="vm.registrationOpen()">Register</span>
+        <span ng-if="!vm.registrationOpen()">View League Info</span>
       </a>
     </div>
   </ion-content>

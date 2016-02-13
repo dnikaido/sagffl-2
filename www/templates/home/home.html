@@ -26,17 +26,33 @@
       </div>
     </div>
 
+    <!--Upcoming tournaments-->
+    <div ng-if="vm.upcomingTournaments"
+         class="card">
+      <div class="item item-divider">
+        Sign up for a tournament!
+      </div>
+      <div ng-repeat="tournament in vm.upcomingTournaments"
+           class="item item-avatar item-text-wrap"
+           ng-click="vm.openInBrowser(tournament.programUrlHtml)">
+        <img ng-src="../img/{{ tournament.sport }}.jpg" alt-image>
+        <p>{{ tournament.name }}</p>
+        <p>Sign up now!</p>
+      </div>
+    </div>
+
+
     <!--Upcoming programs-->
-    <div ng-if="vm.upcomingPrograms"
+    <div ng-if="vm.upcomingLeagues"
          class="card">
       <div class="item item-divider">
         New leagues are open!
       </div>
-      <div ng-repeat="program in vm.upcomingPrograms"
+      <div ng-repeat="league in vm.upcomingLeagues"
            class="item item-avatar item-text-wrap"
-           ng-click="vm.openInBrowser(program.programUrlHtml)">
-        <img ng-src="../img/{{ program.sport }}.jpg" alt-image>
-        <p>{{ program.name }}</p>
+           ng-click="vm.openInBrowser(league.programUrlHtml)">
+        <img ng-src="../img/{{ league.sport }}.jpg" alt-image>
+        <p>{{ league.name }}</p>
         <p>Register now!</p>
       </div>
     </div>
