@@ -54,7 +54,7 @@
       $leagueapps.getPrograms()
         .then(function(programs) {
           if(programs) {
-            vm.upcomingPrograms = _.where(programs, { state: 'LIVE' });
+            vm.upcomingPrograms = _.where(programs, { state: 'UPCOMING' });
           }
         }, function(error) {
           $log.debug(error);
