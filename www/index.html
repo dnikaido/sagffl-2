@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' 'unsafe-inline' 'unsafe-eval' fonts.gstatic.com *.fbcdn.net *.akamaihd.net
+           *.facebook.com *.googleapis.com connect.facebook.net api.leagueapps.com *.firebaseio.com 192.168.1.108:35729;
+           connect-src 'self' wss://*.firebaseio.com ws://192.168.1.108:35729 https://*.facebook.com">
     <title></title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
@@ -10,14 +14,14 @@
     <link href="css/main.css" rel="stylesheet">
 
     <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/ionic/release/js/ionic.bundle.js"></script>
     <script src="lib/firebase/firebase.js"></script>
     <script src="lib/angularfire/dist/angularfire.js"></script>
     <script src="lib/ngstorage/ngStorage.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
+    <script src="lib/ng-cordova-oauth/dist/ng-cordova-oauth.js"></script>
     <script src="lib/angular-easyfb/build/angular-easyfb.js"></script>
     <script src="lib/underscore/underscore.js"></script>
-    <script src="lib/ng-material-floating-button/src/mfb-directive.js"></script>
+    <script src="lib/ng-mfb/src/mfb-directive.js"></script>
     <script src="lib/moment/moment.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
@@ -50,6 +54,7 @@
 
     <!--directives-->
     <script src="templates/images/slide/images.slide.js"></script>
+    <script src="js/directive/alt-image.directive.js"></script>
 
   </head>
 

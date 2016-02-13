@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('myFacebook', [
-    'ngCordova',
+    'ngCordovaOauth',
     'ngStorage',
     'ezfb',
     'ionic'
